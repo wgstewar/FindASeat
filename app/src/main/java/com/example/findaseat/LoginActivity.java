@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 // This method is called when a tab is reselected.
-                // You can choose to handle reselection differently if needed.
             }
         });
     }
