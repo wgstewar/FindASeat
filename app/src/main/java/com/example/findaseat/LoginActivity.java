@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                // This method is called when a tab is unselected.
+                //  This method is called when a tab is unselected.
             }
 
             @Override
