@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313827909556",
+    "project_id": "findaseat-fda22",
+    "storage_bucket": "findaseat-fda22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313827909556:android:2b05563da3064f66fc5ce1",
+        "android_client_info": {
+          "package_name": "com.example.findaseat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCObbgKzure3eaCy5LOKmLRq_GxqTbNd40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

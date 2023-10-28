@@ -25,7 +25,7 @@ public class Profile extends Fragment {
     }
 
     /*Old way of doing login, working on global variable thing*/
-    public void login(View view) {
+    public void onAttemptLogin(View view) {
 /*
         EditText editView = (EditText) findViewById(R.id.enterUsername);
         username = editView.getText().toString();
