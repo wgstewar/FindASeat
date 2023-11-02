@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.findaseat.Classes.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.firebase.database.*;
@@ -90,75 +94,115 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseReference reference;
         reference = root.getReference(
-                "users/" + username + "/password"
+                "users/" + username
         );
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String realPwd = snapshot.getValue(String.class);
+                User u = snapshot.getValue(User.class);
                 Log.d("Login", "attempting login as " + username);
-                Log.d("Login", "fetched pwd is " + realPwd);
-                if (!pwd.equals(realPwd)) {
+                if (!pwd.equals(u.getPassword())) {
                     TextView tv = (TextView) findViewById(R.id.loginTip);
                     tv.setText(R.string.login_failed);
                     tv.setTextColor(Color.RED);
                 } else {
-                    // TODO: send to profile pg
+                    tabLayout.selectTab(tabLayout.getTabAt(0));
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // display some error message to user
-                TextView tv = (TextView) findViewById(R.id.loginTip);
-                tv.setText(R.string.login_failed);
-                tv.setTextColor(Color.RED);
-
-                // log it as Warning for developers
-                Log.w("SecondFragment", "valueEventListener:onCancelled()",
-                        error.toException());
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
     public void attemptRegister(View v) {
         boolean valid = true;
-        String username = findViewById(R.id.enterUsername).toString();
-        valid = !username.isEmpty();
-        String pwd = findViewById(R.id.enterPassword).toString();
-        valid = !pwd.isEmpty();
-        String pwdCopy = findViewById(R.id.reenterPassword).toString();
+        EditText usernameEditText = (EditText) findViewById(R.id.enterUsername);
+        String username = usernameEditText.getText().toString();
 
+        if (username.isEmpty()) {
+            valid = false;
+            usernameEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            usernameEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        EditText passwordEditText = (EditText) findViewById(R.id.enterPassword);
+        String pwd = passwordEditText.getText().toString();
+        if (pwd.isEmpty()) {
+            valid = false;
+            passwordEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            passwordEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        EditText passwordCopyEditText = (EditText) findViewById(R.id.reenterPassword);
+        String pwdCopy = passwordCopyEditText.getText().toString();
+        if (!pwd.equals(pwdCopy)) {
+            valid = false;
+            passwordCopyEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            passwordCopyEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        EditText fullNameEditText = (EditText) findViewById(R.id.enterFullName);
+        String fullName = fullNameEditText.getText().toString();
+        if (fullName.isEmpty()) {
+
+            valid = false;
+            fullNameEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            fullNameEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        EditText emailEditText = (EditText) findViewById(R.id.enterEmail);
+        String email = emailEditText.getText().toString();
+        if (email.isEmpty()) {
+            valid = false;
+            emailEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            emailEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        EditText uscIdEditText = (EditText) findViewById(R.id.enterUscId);
+        String uscId = uscIdEditText.getText().toString();
+        if (uscId.length() != 10) {
+            valid = false;
+            uscIdEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            uscIdEditText.setBackgroundColor(Color.WHITE);
+        }
+
+        Spinner affiliationSpinner = (Spinner) findViewById(R.id.enterAffiliation);
+        String affiliation = affiliationSpinner.getSelectedItem().toString();
+        Log.d("test", "XDDD" + affiliation);
+        if (!valid) {
+            TextView tv = (TextView) findViewById(R.id.registerTip);
+            tv.setText("Please correct the following fields.");
+            tv.setTextColor(Color.RED);
+            return;
+        }
 
         DatabaseReference reference;
         reference = root.getReference(
-                "users/" + username + "/password"
+                "users/" + username
         );
-        reference.addValueEventListener(new ValueEventListener() {
+        root.getReference().child("users").child(username).get().addOnCompleteListener(
+                new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String realPwd = snapshot.getValue(String.class);
-                Log.d("Login", "attempting login as " + username);
-                Log.d("Login", "fetched pwd is " + realPwd);
-                if (!pwd.equals(realPwd)) {
-                    TextView tv = (TextView) findViewById(R.id.loginTip);
-                    tv.setText(R.string.login_failed);
-                    tv.setTextColor(Color.RED);
-                } else {
-                    // TODO: send to profile pg
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().getValue(User.class) == null) {
+                        User newUser = new User(fullName, uscId, username, pwd, affiliation, "");
+                        reference.setValue(newUser);
+                        onDestroy();
+                        tabLayout.selectTab(tabLayout.getTabAt(0));
+                    } else {
+                        TextView tv = (TextView) findViewById(R.id.registerTip);
+                        tv.setText("User already exists!");
+                        tv.setTextColor(Color.RED);
+                    }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // display some error message to user
-                TextView tv = (TextView) findViewById(R.id.loginTip);
-                tv.setText(R.string.login_failed);
-                tv.setTextColor(Color.RED);
-
-                // log it as Warning for developers
-                Log.w("SecondFragment", "valueEventListener:onCancelled()",
-                        error.toException());
             }
         });
     }
