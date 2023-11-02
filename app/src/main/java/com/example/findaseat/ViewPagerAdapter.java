@@ -16,13 +16,14 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position){
             case 0: return new Map();
-            case 1: return new Profile();
+            case 1: return new Login();
+            case 2: return new Register();
             default: return new Map();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 2 ;
+        return 3 ;
     }
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register">
+
+    <TextView
+        android:id="@+id/registerTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please enter registration info"
+        android:textSize="17sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        />
+
+    <EditText
+        android:id="@+id/enterUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="52dp"
+        android:ems="15"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"/>
+    <EditText
+        android:id="@+id/enterPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="102dp"
+        android:ems="15"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        tools:ignore="TextFields" />
+    <EditText
+        android:id="@+id/reenterPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="152dp"
+        android:ems="15"
+        android:hint="Retype password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        tools:ignore="TextFields" />
+
+    <EditText
+        android:id="@+id/enterName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="222dp"
+        android:ems="15"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:importantForAutofill="no" />
+    <EditText
+        android:id="@+id/enterEmail"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="272dp"
+        android:layout_marginStart="20dp"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="Email (\@usc.edu)"
+        android:minHeight="48dp"
+        android:inputType="textEmailAddress" />
+    <EditText
+        android:id="@+id/enterId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="322dp"
+        android:layout_marginStart="20dp"
+        android:minHeight="48dp"
+        android:hint="USC ID #"
+        android:ems="15"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/affiliationTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select affiliation"
+        android:textSize="17sp"
+        android:layout_marginTop="392dp"
+        android:layout_marginStart="20dp"
+        />
+
+    <Spinner
+        android:id="@+id/enterAffiliation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="427dp"
+        android:entries="@array/affiliations"
+        android:hint="USC ID #"
+        android:spinnerMode="dropdown" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="480dp"
+        android:height="60dp"
+        android:onClick="attemptRegister"
+        android:text="REGISTER" />
+
+    <TextView
+        android:id="@+id/registerLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click here to register."
+        android:textSize="17sp"
+        android:layout_marginTop="497dp"
+        android:layout_marginStart="135dp"
+        android:onClick="toLogin"
+        />
+</FrameLayout>

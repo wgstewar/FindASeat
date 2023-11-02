@@ -2,4 +2,12 @@
     <string name="app_name">FindASeat</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Strings related to login -->
+    <string name="login_failed">"Login failed"</string>
+    <string-array name="affiliations">
+        <item>Undergraduate</item>
+        <item>Graduate</item>
+        <item>Faculty</item>
+        <item>Staff</item>
+    </string-array>
 </resources>
