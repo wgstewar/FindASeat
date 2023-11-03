@@ -11,12 +11,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.findaseat.Classes.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,11 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     private FirebaseDatabase root;
-
-//    public void setArguments(Bundle args) {
-//        String username;
-//        String password;
-//    }
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +38,22 @@ public class MainActivity extends AppCompatActivity {
         viewPager2 = findViewById(R.id.view_pager);
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+        viewPager2.setUserInputEnabled(false);
 
         root = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager2.setCurrentItem(tab.getPosition());
+                int pos = tab.getPosition();
+                if (pos == 1) {
+                    FirebaseUser currentUser = auth.getCurrentUser();
+                    if (currentUser != null) {
+                        pos = 2;
+                    }
+                }
+                viewPager2.setCurrentItem(pos, false);
              }
 
             @Override
@@ -87,16 +95,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void attemptLogin(View v) {
-        EditText enterUsername = (EditText) findViewById(R.id.enterUsername);
-        String username = enterUsername.getText().toString();
+        EditText enterEmail = (EditText) findViewById(R.id.enterEmail);
+        String email = enterEmail.getText().toString();
         EditText enterPassword = (EditText) findViewById(R.id.enterPassword);
         String pwd = enterPassword.getText().toString();
 
-        DatabaseReference reference;
-        reference = root.getReference(
-                "users/" + username
-        );
-        reference.addValueEventListener(new ValueEventListener() {
+        auth.signInWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(MainActivity.this, "Successful sign-in.",
+                                    Toast.LENGTH_SHORT).show();
+                            viewPager2.setCurrentItem(2);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Login failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            enterPassword.setText("");
+                        }
+                    }
+                });
+        /*reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User u = snapshot.getValue(User.class);
@@ -112,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
-        });
+        });*/
     }
 
     public void attemptRegister(View v) {
@@ -129,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         EditText passwordEditText = (EditText) findViewById(R.id.enterPassword);
         String pwd = passwordEditText.getText().toString();
-        if (pwd.isEmpty()) {
+        if (pwd.length() < 6) {
             valid = false;
             passwordEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
@@ -183,36 +203,30 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        DatabaseReference reference;
-        reference = root.getReference(
-                "users/" + username
-        );
-        root.getReference().child("users").child(username).get().addOnCompleteListener(
-                new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().getValue(User.class) == null) {
-                        User newUser = new User(fullName, uscId, username, pwd, affiliation, "");
-                        reference.setValue(newUser);
-                        onDestroy();
-                        tabLayout.selectTab(tabLayout.getTabAt(0));
-                    } else {
-                        TextView tv = (TextView) findViewById(R.id.registerTip);
-                        tv.setText("User already exists!");
-                        tv.setTextColor(Color.RED);
+        auth.createUserWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            DatabaseReference reference;
+                            reference = root.getReference("users/" + email);
+                            User newUser = new User(fullName, uscId, username, affiliation);
+                            reference.setValue(newUser);
+                            Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
+                            viewPager2.setCurrentItem(2);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            }
-        });
+                });
     }
 
     public void toRegister(View view) {
-        viewPager2.setCurrentItem(2);
+        viewPager2.setCurrentItem(3, false);
     }
 
     public void toLogin(View view) {
-        viewPager2.setCurrentItem(1);
+        viewPager2.setCurrentItem(1, false);
     }
 
 }

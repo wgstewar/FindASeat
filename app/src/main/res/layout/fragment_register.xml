@@ -115,7 +115,7 @@
         android:id="@+id/registerLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click here to register."
+        android:text="Click here to login."
         android:textSize="17sp"
         android:layout_marginTop="497dp"
         android:layout_marginStart="135dp"

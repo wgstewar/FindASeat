@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.findaseat.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends Fragment {
     @Override
@@ -17,5 +18,4 @@ public class Login extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    static boolean passwordMatch;
 }
