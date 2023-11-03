@@ -8,6 +8,7 @@ public class User {
     private String uscId;
     private String username;
     private String affiliation;
+    private String email;
 
     public User() {
         reservations = new ArrayList<Integer>();
@@ -15,12 +16,14 @@ public class User {
         uscId = "0000000000";
         username = "";
         affiliation = "";
+        email = "";
     }
-    public User(String fullName, String uscId, String username, String affiliation) {
+    public User(String fullName, String uscId, String username, String email, String affiliation) {
         reservations = new ArrayList<Integer>();
         this.fullName = fullName;
         this.uscId = uscId;
         this.username = username;
+        this.email = email;
         this.affiliation = affiliation;
     }
 
@@ -28,7 +31,7 @@ public class User {
         return reservations;
     }
 
-    public String getName() {
+    public String getFullName() {
         return fullName;
     }
 
@@ -40,6 +43,8 @@ public class User {
         return username;
     }
 
+    public String getEmail() { return email; }
+
     public String getAffiliation() {
         return affiliation;
     }
@@ -48,7 +53,7 @@ public class User {
         this.reservations = reservations;
     }
 
-    public void setName(String fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
@@ -60,6 +65,7 @@ public class User {
         this.username = username;
     }
 
+    public void setEmail(String email) { this.email = email; }
     public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
     }

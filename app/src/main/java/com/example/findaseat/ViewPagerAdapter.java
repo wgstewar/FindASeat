@@ -16,7 +16,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Log.d("tag", "kill yourself diew " + position);
         switch(position){
             case 0: return new Map();
             case 1: return new Login();

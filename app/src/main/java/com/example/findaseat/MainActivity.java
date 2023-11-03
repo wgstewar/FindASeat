@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        auth.signOut();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -116,23 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-        /*reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User u = snapshot.getValue(User.class);
-                Log.d("Login", "attempting login as " + username);
-                if (!pwd.equals(u.getPassword())) {
-                    TextView tv = (TextView) findViewById(R.id.loginTip);
-                    tv.setText(R.string.login_failed);
-                    tv.setTextColor(Color.RED);
-                } else {
-                    tabLayout.selectTab(tabLayout.getTabAt(0));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });*/
     }
 
     public void attemptRegister(View v) {
@@ -195,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
 
         Spinner affiliationSpinner = (Spinner) findViewById(R.id.enterAffiliation);
         String affiliation = affiliationSpinner.getSelectedItem().toString();
-        Log.d("test", "XDDD" + affiliation);
         if (!valid) {
             TextView tv = (TextView) findViewById(R.id.registerTip);
             tv.setText("Please correct the following fields.");
@@ -208,9 +191,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+                            auth.getCurrentUser().updateProfile(profileUpdates);
+
                             DatabaseReference reference;
-                            reference = root.getReference("users/" + email);
-                            User newUser = new User(fullName, uscId, username, affiliation);
+                            reference = root.getReference("users/" + username);
+                            User newUser = new User(fullName, uscId, username, email, affiliation);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
                             viewPager2.setCurrentItem(2);

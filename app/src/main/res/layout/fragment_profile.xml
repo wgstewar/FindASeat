@@ -12,17 +12,26 @@
         tools:context=".Register">
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginStart="20sp"
         android:layout_marginTop="20sp"
         tools:src="@tools:sample/avatars" />
     <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20sp"
-        android:layout_marginTop="20sp"
-        tools:src="@tools:sample/avatars" />
+        android:id="@+id/displayFullName"
+        android:layout_width="190dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="20dp"
+        android:text="FILLER"
+        android:textSize="30dp"/>
+        <TextView
+            android:id="@+id/displayUsername"
+            android:layout_width="190dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="190dp"
+            android:layout_marginTop="120dp"
+            android:text="FILLER"
+            android:textSize="20dp"/>
     </FrameLayout>
 </ScrollView>
