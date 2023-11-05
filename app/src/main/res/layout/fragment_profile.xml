@@ -1,37 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Profile">
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+ <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Register">
+        tools:context=".Profile">
+
     <ImageView
         android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="20sp"
         android:layout_marginTop="20sp"
-        tools:src="@tools:sample/avatars" />
-    <TextView
-        android:id="@+id/displayFullName"
-        android:layout_width="190dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="190dp"
-        android:layout_marginTop="20dp"
-        android:text="FILLER"
-        android:textSize="30dp"/>
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
         <TextView
-            android:id="@+id/displayUsername"
+            android:id="@+id/displayFullName"
             android:layout_width="190dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:layout_marginStart="190dp"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="20dp"
             android:text="FILLER"
-            android:textSize="20dp"/>
-    </FrameLayout>
-</ScrollView>
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/displayUserInfo"
+            android:layout_width="190dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="190dp"
+            android:layout_marginTop="80dp"
+            android:text="FILLER"
+            android:textSize="12sp" />
+    <TextView
+        android:id="@+id/displayUscId"
+        android:layout_width="190dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="125dp"
+        android:text="FILLER"
+        android:textSize="12sp" />
+
+    <ListView
+        android:id="@+id/reservationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="20dp"/>
+</FrameLayout>

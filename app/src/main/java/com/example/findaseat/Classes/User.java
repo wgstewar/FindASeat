@@ -3,7 +3,7 @@ package com.example.findaseat.Classes;
 import java.util.ArrayList;
 
 public class User {
-    private ArrayList<Integer> reservations;
+    private ArrayList<Reservation> reservations;
     private String fullName;
     private String uscId;
     private String username;
@@ -11,7 +11,7 @@ public class User {
     private String email;
 
     public User() {
-        reservations = new ArrayList<Integer>();
+        reservations = new ArrayList<Reservation>();
         fullName = "";
         uscId = "0000000000";
         username = "";
@@ -19,7 +19,7 @@ public class User {
         email = "";
     }
     public User(String fullName, String uscId, String username, String email, String affiliation) {
-        reservations = new ArrayList<Integer>();
+        reservations = new ArrayList<Reservation>();
         this.fullName = fullName;
         this.uscId = uscId;
         this.username = username;
@@ -27,7 +27,7 @@ public class User {
         this.affiliation = affiliation;
     }
 
-    public ArrayList<Integer> getReservations() {
+    public ArrayList<Reservation> getReservations() {
         return reservations;
     }
 
@@ -49,7 +49,7 @@ public class User {
         return affiliation;
     }
 
-    public void setReservations(ArrayList<Integer> reservations) {
+    public void setReservations(ArrayList<Reservation> reservations) {
         this.reservations = reservations;
     }
 
@@ -68,5 +68,12 @@ public class User {
     public void setEmail(String email) { this.email = email; }
     public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
+    }
+
+    public void addReservation(Reservation r) {
+        if (reservations.size() == 20) {
+            reservations.remove(0);
+        }
+        reservations.add(r);
     }
 }

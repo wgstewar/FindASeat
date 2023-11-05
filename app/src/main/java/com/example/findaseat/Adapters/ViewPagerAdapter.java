@@ -1,4 +1,4 @@
-package com.example.findaseat;
+package com.example.findaseat.Adapters;
 
 import android.util.Log;
 
@@ -6,6 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.findaseat.Login;
+import com.example.findaseat.Map;
+import com.example.findaseat.Profile;
+import com.example.findaseat.Register;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 

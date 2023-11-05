@@ -6,19 +6,18 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.findaseat.Classes.User;
+import com.example.findaseat.Adapters.ViewPagerAdapter;
+import com.example.findaseat.Classes.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        auth.signOut();
+        // auth.signOut();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -67,32 +66,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        /*viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                tabLayout.getTabAt(position).select();
-            }
-        });*/
-
-
-//        Intent intent = getIntent();
-//        String username = intent.getStringExtra("com.example.username.MESSAGE");
-//        if (username == "guest" || username == null){
-//            username = "Hello, guest";
-//        }
-//        else {
-//            username = "Hello, " + username;
-//        }
-//        TextView textView = (TextView) findViewById(R.id.textView);
-//        textView.setText(username);
-
     }
 
     protected void onDestroy() {
         super.onDestroy();
         root = null;
-
     }
 
     public void attemptLogin(View v) {
@@ -195,9 +173,9 @@ public class MainActivity extends AppCompatActivity {
                                     .setDisplayName(username)
                                     .build();
                             auth.getCurrentUser().updateProfile(profileUpdates);
-
+                            String uid = auth.getCurrentUser().getUid();
                             DatabaseReference reference;
-                            reference = root.getReference("users/" + username);
+                            reference = root.getReference("users/" + uid);
                             User newUser = new User(fullName, uscId, username, email, affiliation);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();

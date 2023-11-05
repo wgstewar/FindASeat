@@ -5,16 +5,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.findaseat.Classes.User;
+import com.example.findaseat.Adapters.ReservationListAdapter;
+import com.example.findaseat.Classes.*;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Profile extends Fragment {
     private FirebaseAuth auth;
@@ -30,19 +41,27 @@ public class Profile extends Fragment {
         auth.addAuthStateListener(firebaseAuth -> {
             FirebaseUser user = auth.getCurrentUser();
             if (user != null) {
-                String username = user.getDisplayName();
-                DatabaseReference reference = root.getReference("users/" + username);
-                Log.d("here", username + "huhhh");
-                reference.addValueEventListener(new ValueEventListener() {
+                String uid = user.getUid();
+                DatabaseReference userRef = root.getReference("users/" + uid);
+                User u;
+                CountDownLatch doneLoad = new CountDownLatch(1);
+                userRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         User u = snapshot.getValue(User.class);
-                        Log.d("testtest", username + "huhhh");
                         if (u != null) {
                             TextView fullNameView = (TextView) getActivity().findViewById(R.id.displayFullName);
-                            TextView usernameView = (TextView) getActivity().findViewById(R.id.displayUsername);
+                            TextView userInfoView = (TextView) getActivity().findViewById(R.id.displayUserInfo);
+                            TextView uscIdView = (TextView) getActivity().findViewById(R.id.displayUscId);
                             fullNameView.setText(u.getFullName());
-                            usernameView.setText(u.getUsername());
+                            userInfoView.setText(u.getUsername() + ", " + u.getAffiliation());
+                            uscIdView.setText("USC ID: #" + u.getUscId());
+
+                            ArrayList<Reservation> resList = u.getReservations();
+                            Collections.reverse(resList);
+                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), resList);
+                            ListView reservationView = getActivity().findViewById(R.id.reservationView);
+                            reservationView.setAdapter(adapter);
                         }
                     }
 
