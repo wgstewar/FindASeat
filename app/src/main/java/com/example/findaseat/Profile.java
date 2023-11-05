@@ -1,7 +1,6 @@
 package com.example.findaseat;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class Profile extends Fragment {
     private FirebaseDatabase root;
     @Nullable
     public static User currentUser;
-    private DatabaseReference userRef;
+    public static DatabaseReference userRef;
     private ValueEventListener userListener;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,

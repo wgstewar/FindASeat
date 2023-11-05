@@ -1,19 +1,16 @@
 package com.example.findaseat.Adapters;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.findaseat.Login;
-import com.example.findaseat.Map;
-import com.example.findaseat.Profile;
-import com.example.findaseat.Register;
+import com.example.findaseat.*;
+
+import java.util.ArrayList;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
-
+    private ArrayList<Fragment> fragments = new ArrayList<>();
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -21,17 +18,15 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch(position){
-            case 0: return new Map();
-            case 1: return new Login();
-            case 2: return new Profile();
-            case 3: return new Register();
-            default: return new Map();
-        }
+        return fragments.get(position);
+    }
+
+    public void addFragment(Fragment fragment) {
+        fragments.add(fragment);
     }
 
     @Override
     public int getItemCount() {
-        return 4 ;
+        return fragments.size();
     }
 }

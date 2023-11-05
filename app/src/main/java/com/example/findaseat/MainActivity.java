@@ -7,9 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -39,7 +37,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.tab_layout);
         viewPager2 = findViewById(R.id.view_pager);
+
         viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPagerAdapter.addFragment(new Map());
+        viewPagerAdapter.addFragment(new Login());
+        viewPagerAdapter.addFragment(new Profile());
+        viewPagerAdapter.addFragment(new Register());
+
         viewPager2.setAdapter(viewPagerAdapter);
         viewPager2.setUserInputEnabled(false);
         viewPager2.setOffscreenPageLimit(1);
@@ -190,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void attemptLogout(View view) {
         auth.signOut();
-        viewPager2.setCurrentItem(0, false);
+        viewPagerAdapter.notifyDataSetChanged();
+        tabLayout.selectTab(tabLayout.getTabAt(0));
     }
 
     public void toRegister(View view) {
@@ -202,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cancelActiveReservation(View view) {
-        Log.d("..", "hello...");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cancel");
         builder.setMessage("Are you sure you would like to cancel your reservation?");
