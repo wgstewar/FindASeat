@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
         viewPager2.setUserInputEnabled(false);
+        viewPager2.setOffscreenPageLimit(1);
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        auth.signOut();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -60,14 +61,10 @@ public class MainActivity extends AppCompatActivity {
              }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
 
@@ -182,12 +179,18 @@ public class MainActivity extends AppCompatActivity {
                             User newUser = new User(fullName, uscId, username, email, affiliation);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, new Register()).commit();
                             viewPager2.setCurrentItem(2);
                         } else {
                             Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void attemptLogout(View view) {
+        auth.signOut();
+        viewPager2.setCurrentItem(0, false);
     }
 
     public void toRegister(View view) {
@@ -207,10 +210,10 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Profile.u.cancelActiveReservation();
+                        Profile.currentUser.cancelActiveReservation();
                         String uid = auth.getCurrentUser().getUid();
                         DatabaseReference userRef = root.getReference("users/" + uid);
-                        userRef.setValue(Profile.u);
+                        userRef.setValue(Profile.currentUser);
                     }
                 });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

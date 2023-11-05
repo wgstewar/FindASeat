@@ -14,24 +14,18 @@ import androidx.annotation.Nullable;
 
 import com.example.findaseat.Adapters.ReservationListAdapter;
 import com.example.findaseat.Classes.*;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
+
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Profile extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase root;
     @Nullable
-    public static User u;
+    public static User currentUser;
+    private DatabaseReference userRef;
+    private ValueEventListener userListener;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -42,21 +36,20 @@ public class Profile extends Fragment {
             FirebaseUser user = auth.getCurrentUser();
             if (user != null) {
                 String uid = user.getUid();
-                DatabaseReference userRef = root.getReference("users/" + uid);
-                CountDownLatch doneLoad = new CountDownLatch(1);
-                userRef.addValueEventListener(new ValueEventListener() {
+                userRef = root.getReference("users/" + uid);
+                userListener = userRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        u = snapshot.getValue(User.class);
-                        if (u != null) {
+                        currentUser = snapshot.getValue(User.class);
+                        if (currentUser != null) {
                             TextView fullNameView = (TextView) getActivity().findViewById(R.id.displayFullName);
                             TextView userInfoView = (TextView) getActivity().findViewById(R.id.displayUserInfo);
                             TextView uscIdView = (TextView) getActivity().findViewById(R.id.displayUscId);
-                            fullNameView.setText(u.getFullName());
-                            userInfoView.setText(u.getUsername() + ", " + u.getAffiliation());
-                            uscIdView.setText("USC ID: #" + u.getUscId());
+                            fullNameView.setText(currentUser.getFullName());
+                            userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
+                            uscIdView.setText("USC ID: #" + currentUser.getUscId());
 
-                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), u.getReservations());
+                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), currentUser.getReservations());
                             ListView reservationView = getActivity().findViewById(R.id.reservationView);
                             reservationView.setAdapter(adapter);
                         }
@@ -65,6 +58,13 @@ public class Profile extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
+            } else {
+                if (userRef != null && userListener != null) {
+                    userRef.removeEventListener(userListener);
+                    currentUser = null;
+                    userRef = null;
+                    userListener = null;
+                }
             }
         });
 

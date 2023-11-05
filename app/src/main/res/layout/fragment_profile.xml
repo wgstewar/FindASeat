@@ -40,6 +40,15 @@
         android:layout_marginTop="125dp"
         android:text="FILLER"
         android:textSize="12sp" />
+    <TextView
+        android:id="@+id/logoutLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="330dp"
+        android:layout_marginTop="180dp"
+        android:text="Log out"
+        android:textSize="12sp"
+        android:onClick="attemptLogout"/>
 
     <ListView
         android:id="@+id/reservationView"
