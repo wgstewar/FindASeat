@@ -1,11 +1,14 @@
 package com.example.findaseat;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        // auth.signOut();
+        auth.signOut();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -193,6 +196,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void toLogin(View view) {
         viewPager2.setCurrentItem(1, false);
+    }
+
+    public void cancelActiveReservation(View view) {
+        Log.d("..", "hello...");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cancel");
+        builder.setMessage("Are you sure you would like to cancel your reservation?");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Profile.u.cancelActiveReservation();
+                        String uid = auth.getCurrentUser().getUid();
+                        DatabaseReference userRef = root.getReference("users/" + uid);
+                        userRef.setValue(Profile.u);
+                    }
+                });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

@@ -1,5 +1,9 @@
 package com.example.findaseat.Classes;
 
+import androidx.collection.CircularArray;
+
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 
 public class User {
@@ -72,8 +76,15 @@ public class User {
 
     public void addReservation(Reservation r) {
         if (reservations.size() == 20) {
-            reservations.remove(0);
+            reservations.remove(19);
         }
-        reservations.add(r);
+        reservations.add(0, r);
+    }
+
+    public void cancelActiveReservation() {
+        Reservation r = reservations.get(0);
+        if (r.getStatus() == ReservationStatus.ACTIVE) {
+            r.setStatus(ReservationStatus.CANCELLED);
+        }
     }
 }

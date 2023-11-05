@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.findaseat.*;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
 
@@ -48,6 +49,7 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
         } else {
             modifyButton.setVisibility(View.INVISIBLE);
             cancelButton.setVisibility(View.INVISIBLE);
+
         }
 
         return convertView;

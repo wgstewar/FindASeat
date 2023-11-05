@@ -31,7 +31,7 @@ public class Profile extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase root;
     @Nullable
-    @Override
+    public static User u;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -43,12 +43,11 @@ public class Profile extends Fragment {
             if (user != null) {
                 String uid = user.getUid();
                 DatabaseReference userRef = root.getReference("users/" + uid);
-                User u;
                 CountDownLatch doneLoad = new CountDownLatch(1);
                 userRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User u = snapshot.getValue(User.class);
+                        u = snapshot.getValue(User.class);
                         if (u != null) {
                             TextView fullNameView = (TextView) getActivity().findViewById(R.id.displayFullName);
                             TextView userInfoView = (TextView) getActivity().findViewById(R.id.displayUserInfo);
@@ -57,9 +56,7 @@ public class Profile extends Fragment {
                             userInfoView.setText(u.getUsername() + ", " + u.getAffiliation());
                             uscIdView.setText("USC ID: #" + u.getUscId());
 
-                            ArrayList<Reservation> resList = u.getReservations();
-                            Collections.reverse(resList);
-                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), resList);
+                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), u.getReservations());
                             ListView reservationView = getActivity().findViewById(R.id.reservationView);
                             reservationView.setAdapter(adapter);
                         }
