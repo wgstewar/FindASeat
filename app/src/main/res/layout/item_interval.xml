@@ -5,30 +5,29 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/startTime"
+        android:id="@+id/timeView"
         android:layout_width="122dp"
         android:layout_height="20dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
-        android:text="START TIME" />
+        android:text="TIME" />
 
     <TextView
-        android:id="@+id/endTime"
-        android:layout_width="wrap_content"
+        android:id="@+id/seatsAvailView"
+        android:layout_width="122dp"
         android:layout_height="20dp"
-        android:layout_weight="1"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="30dp"
-        android:layout_marginStart="100dp"
-        android:text="END TIME" />
-
+        android:layout_weight="1"
+        android:text="# AVAILABLE" />
 
     <Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="5dp"
         android:text="ADD"
         android:onClick="addToCart"/>
 
@@ -37,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="5dp"
         android:text="REMOVE"
         android:onClick="removeFromCart"/>
 </FrameLayout>

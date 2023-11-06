@@ -1,77 +1,79 @@
 package com.example.findaseat;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.ArrayList;
 
-import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import com.example.findaseat.Adapters.ReservationListAdapter;
 import com.example.findaseat.Adapters.IntervalListAdapter;
+import com.example.findaseat.Classes.User;
+import com.example.findaseat.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
 import com.example.findaseat.Classes.*;
 
-import com.google.firebase.auth.*;
-import com.google.firebase.database.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Booking extends Fragment {
 
-    ArrayList<int> shoppingCart;
+    ArrayList<Reservation> resShoppingCart = new ArrayList<Reservation>();
+    HashSet<Integer> shoppingCart;
 
     private FirebaseAuth auth;
     private FirebaseDatabase root;
-    @Nullable
-    public static User currentUser;
-    public static DatabaseReference userRef;
-    private ValueEventListener userListener;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root = FirebaseDatabase.getInstance();
-        auth = FirebaseAuth.getInstance();
+        View inf = inflater.inflate(R.layout.fragment_booking, container, false);
+        shoppingCart = new HashSet<>();
 
-        auth.addAuthStateListener(firebaseAuth -> {
-            FirebaseUser user = auth.getCurrentUser();
-            if (user != null) {
-                String uid = user.getUid();
-                userRef = root.getReference("users/" + uid);
-                userListener = userRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        currentUser = snapshot.getValue(User.class);
-                        if (currentUser != null) {
-                            TextView fullNameView = (TextView) getActivity().findViewById(R.id.displayFullName);
-                            TextView userInfoView = (TextView) getActivity().findViewById(R.id.displayUserInfo);
-                            TextView uscIdView = (TextView) getActivity().findViewById(R.id.displayUscId);
-                            fullNameView.setText(currentUser.getFullName());
-                            userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
-                            uscIdView.setText("USC ID: #" + currentUser.getUscId());
-
-                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), currentUser.getReservations());
-                            ListView reservationView = getActivity().findViewById(R.id.reservationView);
-                            reservationView.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
-            } else {
-                if (userRef != null && userListener != null) {
-                    userRef.removeEventListener(userListener);
-                    currentUser = null;
-                    userRef = null;
-                    userListener = null;
-                }
-            }
-        });
-
-        View inf = inflater.inflate(R.layout.fragment_profile, container, false);
+        ListView myList = inf.findViewById(R.id.intervalListView);
+        Building b = new Building();
+        ArrayList<Integer> a = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            a.add(20);
+        }
+        IntervalListAdapter adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart);
+        myList.setAdapter(adapter);
         return inf;
     }
+//    public void sortCart(){
+//        Comparator<Reservation> startTimeComparator = Comparator.comparingInt(Reservation::getStartTime);
+//        // Sort the list using startTime as comparator
+//        Collections.sort(resShoppingCart, startTimeComparator);
+//    }
+
+    Button addButton = (Button)view.findViewById(R.id.addButton);
+    addButton.setOnClickListener(new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Reservation reservation =
+            if (reservation == null){
+
+            }
+            else {
+                Profile.currentUser.
+            }
+        }
+    });
+
+
 }
+

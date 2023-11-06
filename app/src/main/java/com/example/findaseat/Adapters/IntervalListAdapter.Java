@@ -9,36 +9,35 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.findaseat.*;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class IntervalListAdapter extends ArrayAdapter<int> {
-    private ArrayList<int> dataSet;
-    int intervalsSize;
-    Context mContext;
+public class IntervalListAdapter extends ArrayAdapter<Integer> {
+    Building building;
+    HashSet<Integer> shoppingCart;
 
-    public IntervalListAdapter(Context context, Building building) {
-        ArrayList<int> intervals = building.getAvailability()[MONDAY];
-        intervalsSize = intervals.size();
-        super(context, 0, intervals);
+    public IntervalListAdapter(Context context, ArrayList<Integer> avail, Building building, HashSet<Integer> shoppingCart) {
+        super(context, 0, avail);
+        this.building = building;
+        this.shoppingCart = shoppingCart;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int intervalindex = getItem(position);
+        int numAvail = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_interval, parent, false);
         }
 
         double intervalStartTime;
         double intervalEndTime;
-        /*Getting accurate start time*/
-        intervalStartTime = intervalindex/2.0 + building.getOpenTime();
+        //Getting accurate start time
+        intervalStartTime = position/2.0 + building.getOpenTime();
         intervalEndTime = intervalStartTime + 0.5;
-        /*set am/pm */
+        /*set am/pm*/
         String startExtension;
         String endExtension;
         if (intervalStartTime < 12.0){
@@ -53,9 +52,8 @@ public class IntervalListAdapter extends ArrayAdapter<int> {
         } else {
             endExtension = " pm";
         }
-        String intervalStartTimeString;
-        String intervalEndTimeString;
-        intervalStartTimeString = Double.toString(intervalStartTime);
+        String intervalStartTimeString = Double.toString(intervalStartTime);
+        String intervalEndTimeString = Double.toString(intervalEndTime);
         if (intervalStartTime%1 == 0) {
             intervalStartTimeString += ":00" + startExtension;
             intervalEndTimeString += ":30" + endExtension;
@@ -68,19 +66,22 @@ public class IntervalListAdapter extends ArrayAdapter<int> {
             intervalEndTimeString += ":00" + endExtension;
         }
 
-        TextView endTimeView = (TextView) convertView.findViewById(R.id.startTime);
-        TextView startTimeView = (TextView) convertView.findViewById(R.id.endTime);
+        TextView timeView = (TextView) convertView.findViewById(R.id.timeView);
+        TextView seatsAvailView = (TextView) convertView.findViewById(R.id.seatsAvailView);
         Button addButton = (Button) convertView.findViewById(R.id.addButton);
         Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
 
-        endTimeView.setText(intervalEndTimeString);
-        startTimeView.setText(intervalStartTimeString);
-        Button addButton= (Button)view.findViewById(R.id.addButton);
-        Button removeButton= (Button)view.findViewById(R.id.removeButton);
+        seatsAvailView.setText(numAvail + " seats available.");
+        timeView.setText(intervalStartTimeString + " - " + intervalEndTimeString);
 
         convertView.setBackgroundColor(Color.WHITE);
-        addButton.setVisibility(View.VISIBLE);
-        removeButton.setVisibility(View.INVISIBLE);
+        if (shoppingCart.contains(position)) {
+            addButton.setVisibility(View.INVISIBLE);
+            removeButton.setVisibility(View.VISIBLE);
+        } else {
+            addButton.setVisibility(View.VISIBLE);
+            removeButton.setVisibility(View.INVISIBLE);
+        }
 
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -88,7 +89,10 @@ public class IntervalListAdapter extends ArrayAdapter<int> {
                 addButton.setVisibility(View.INVISIBLE);
                 removeButton.setVisibility(View.VISIBLE);
                 convertView.setBackgroundColor(Color.rgb(73, 242, 92));
-
+                Date date = new Date(2023, 12, 10, MONDAY);
+                Reservation reservation = new Reservation(bldgID, date, position + building.getOpenTime(), position + building.getOpenTime() + 1);
+                Booking.resShoppingCart.add(reservation);
+                Booking.shoppingCart.add(position);
             }
         });
         removeButton.setOnClickListener(new View.OnClickListener(){
@@ -97,7 +101,8 @@ public class IntervalListAdapter extends ArrayAdapter<int> {
                 addButton.setVisibility(View.VISIBLE);
                 removeButton.setVisibility(View.INVISIBLE);
                 convertView.setBackgroundColor(Color.WHITE);
-
+                Booking.shoppingCart.remove(position);
+                Booking.resShoppingCart.remove(reservationToRemove)
             }
         });
 

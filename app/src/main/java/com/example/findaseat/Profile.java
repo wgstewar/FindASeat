@@ -17,7 +17,6 @@ import com.example.findaseat.Classes.*;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
-
 public class Profile extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase root;
