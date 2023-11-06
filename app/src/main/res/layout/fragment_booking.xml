@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Booking">
+
+    <TextView
+        android:id="@+id/displayBuildingName"
+        android:layout_width="190dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="20dp"
+        android:text="FILLER LIBRARY"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/displayDescription"
+        android:layout_width="190dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="80dp"
+        android:text="FILLER"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/mon"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="MONDAY"
+        android:onClick="displayMonday"/>
+
+    <Button
+        android:id="@+id/tue"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="TUESDAY"
+        android:onClick="displayTuesday"/>
+    <Button
+        android:id="@+id/wed"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="TUESDAY"
+        android:onClick="displayWednsday"/>
+
+    <Button
+        android:id="@+id/thur"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="MONDAY"
+        android:onClick="displayThurday"/>
+
+    <Button
+        android:id="@+id/fri"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="TUESDAY"
+        android:onClick="displayFriday"/>
+    <Button
+        android:id="@+id/sat"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="TUESDAY"
+        android:onClick="displaySaturday"/>
+
+    <Button
+        android:id="@+id/sun"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginStart="100dp"
+        android:text="TUESDAY"
+        android:onClick="displaySunday"/>
+
+    <ListView
+        android:id="@+id/intervalView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="20dp"/>
+</FrameLayout>
