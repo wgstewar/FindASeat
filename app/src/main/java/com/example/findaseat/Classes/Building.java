@@ -9,7 +9,7 @@ public class Building {
     private int openTime;
     private int closeTime;
     private int maxAvailability;
-    private HashMap<String, ArrayList<Integer>> availability;
+    private HashMap<Weekday, ArrayList<Integer>> availability;
 
     public Building() {
         name = "";
@@ -36,7 +36,7 @@ public class Building {
         return closeTime;
     }
 
-    public HashMap<String, ArrayList<Integer>> getAvailability() {
+    public HashMap<Weekday, ArrayList<Integer>> getAvailability() {
         return availability;
     }
 
@@ -64,7 +64,7 @@ public class Building {
         this.maxAvailability = maxAvailability;
     }
 
-    public void setAvailability(HashMap<String, ArrayList<Integer>> availability) {
+    public void setAvailability(HashMap<Weekday, ArrayList<Integer>> availability) {
         this.availability = availability;
     }
 
