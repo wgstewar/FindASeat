@@ -23,6 +23,14 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     public void addFragment(Fragment fragment) {
         fragments.add(fragment);
+        notifyDataSetChanged();
+    }
+
+    public void destroyBookingPg() {
+        if (fragments.get(4) instanceof Booking) {
+            fragments.remove(4);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

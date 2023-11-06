@@ -3,6 +3,7 @@ package com.example.findaseat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Dialog;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.tab_layout);
+
         viewPager2 = findViewById(R.id.view_pager);
 
         viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPagerAdapter.addFragment(new Booking());
+        viewPagerAdapter.addFragment(new Map());
         viewPagerAdapter.addFragment(new Login());
         viewPagerAdapter.addFragment(new Profile());
         viewPagerAdapter.addFragment(new Register());
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (viewPagerAdapter.getItemCount() == 5) {
+                    viewPagerAdapter.destroyBookingPg();
+                }
                 int pos = tab.getPosition();
                 if (pos == 1) {
                     FirebaseUser currentUser = auth.getCurrentUser();
@@ -85,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                if (viewPagerAdapter.getItemCount() == 5) {
+                    viewPagerAdapter.destroyBookingPg();
+                }
+                int pos = tab.getPosition();
+                if (pos == 0) viewPager2.setCurrentItem(pos, false);
             }
         });
     }
@@ -310,5 +321,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         modifyDialog.show();
+    }
+
+    public void testFunctionDeleteLater(View view) {
+        Booking fg = new Booking();
+        Bundle bd = new Bundle();
+        bd.putInt("buildingId", 1);
+        fg.setArguments(bd);
+        viewPagerAdapter.addFragment(fg);
+        viewPager2.setCurrentItem(4, false);
+    }
+
+    public void testFunction2DeleteLater(View view) {
+        Booking fg = new Booking();
+        Bundle bd = new Bundle();
+        bd.putInt("buildingId", 2);
+        fg.setArguments(bd);
+        viewPagerAdapter.addFragment(fg);
+        viewPager2.setCurrentItem(4, false);
     }
 }

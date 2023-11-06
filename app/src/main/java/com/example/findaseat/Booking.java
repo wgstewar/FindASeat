@@ -49,6 +49,7 @@ public class Booking extends Fragment {
 
     HashSet<Integer> shoppingCart;
     Building b;
+    int buildingId;
     public static Weekday dayOfWeek = Weekday.MONDAY;
     ArrayList<Integer> a = new ArrayList<>();
     private Spinner selectWeekdaySpinner;
@@ -56,12 +57,13 @@ public class Booking extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bd = getArguments();
+        buildingId = bd.getInt("buildingId");
     }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View inf = inflater.inflate(R.layout.fragment_booking, container, false);
-        int buildingId = 1;
 
         FirebaseDatabase.getInstance().getReference("buildings/" + buildingId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
