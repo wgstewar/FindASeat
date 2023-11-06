@@ -19,7 +19,7 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
     Building building;
     HashSet<Integer> shoppingCart;
 
-    public IntervalListAdapter(Context context, ArrayList<Integer> avail, Building building, HashSet<Integer> shoppingCart) {
+    public IntervalListAdapter(Context context, ArrayList<Integer> avail, Building building, HashSet<Integer> shoppingCart, int buildingID) {
         super(context, 0, avail);
         this.building = building;
         this.shoppingCart = shoppingCart;
@@ -88,9 +88,9 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
             public void onClick(View v) {
                 addButton.setVisibility(View.INVISIBLE);
                 removeButton.setVisibility(View.VISIBLE);
-                convertView.setBackgroundColor(Color.rgb(73, 242, 92));
-                Date date = new Date(2023, 12, 10, MONDAY);
-                Reservation reservation = new Reservation(bldgID, date, position + building.getOpenTime(), position + building.getOpenTime() + 1);
+                //convertView.setBackgroundColor(Color.rgb(73, 242, 92));
+                Date date = new Date(2023, 12, 10, Booking.dayOfWeek);
+                Reservation reservation = new Reservation(buildingID, date, position + building.getOpenTime(), position + building.getOpenTime() + 1);
                 Booking.resShoppingCart.add(reservation);
                 Booking.shoppingCart.add(position);
             }
@@ -100,9 +100,9 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
             public void onClick(View v) {
                 addButton.setVisibility(View.VISIBLE);
                 removeButton.setVisibility(View.INVISIBLE);
-                convertView.setBackgroundColor(Color.WHITE);
+                //convertView.setBackgroundColor(Color.WHITE);
                 Booking.shoppingCart.remove(position);
-                Booking.resShoppingCart.remove(reservationToRemove)
+                Booking.resShoppingCart.remove(reservationToRemove);
             }
         });
 

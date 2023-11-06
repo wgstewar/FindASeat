@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import android.widget.Toast;
+
 
 import com.example.findaseat.Adapters.IntervalListAdapter;
 import com.example.findaseat.Classes.User;
@@ -35,9 +37,13 @@ public class Booking extends Fragment {
 
     ArrayList<Reservation> resShoppingCart = new ArrayList<Reservation>();
     HashSet<Integer> shoppingCart;
-
+    public static Weekday dayOfWeek = Weekday.MONDAY;
+    ArrayList<Integer> a = new ArrayList<>();
     private FirebaseAuth auth;
     private FirebaseDatabase root;
+
+    private IntervalListAdapter adapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -46,31 +52,72 @@ public class Booking extends Fragment {
 
         ListView myList = inf.findViewById(R.id.intervalListView);
         Building b = new Building();
-        ArrayList<Integer> a = new ArrayList<>();
+        int buildingId = 1;
+        /* use dayOfWeek to get correct ArrayList() */
+        /* a = building.getAvailability[dayOfWeek]; */
         for (int i = 0; i < 20; i++) {
             a.add(20);
         }
-        IntervalListAdapter adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart);
+        IntervalListAdapter adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart, buildingId);
         myList.setAdapter(adapter);
+
+        Spinner selectWeekdaySpinner = inf.findViewById(R.id.selectWeekday);
+        selectWeekdaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                dayOfWeek = parent.getItemAtPosition(pos);
+                a = building.getAvailability[dayOfWeek];
+                updateAdapterData();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                a = building.getAvailability[Weekday.MONDAY];
+                updateAdapterData();
+            }
+        });
+
         return inf;
     }
-//    public void sortCart(){
-//        Comparator<Reservation> startTimeComparator = Comparator.comparingInt(Reservation::getStartTime);
-//        // Sort the list using startTime as comparator
-//        Collections.sort(resShoppingCart, startTimeComparator);
-//    }
 
-    Button addButton = (Button)view.findViewById(R.id.addButton);
-    addButton.setOnClickListener(new View.OnClickListener(){
+    private void updateAdapterData() {
+        adapter.notifyDataSetChanged();
+    }
+
+
+    Button bookButton = (Button)view.findViewById(R.id.book);
+    bookButton.setOnClickListener(new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-            Reservation reservation =
-            if (reservation == null){
+            Reservation reservation = createReservation(buildingId, shoppingCart)
+            if (reservation == null) {
+                Toast.makeText(MainActivity.this, "Invalid Reservation: You may reserve only consecutive 30 min slots adding up to a total of no more than 2 hours.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            ArrayList<Reservation>() currUserReservations =
+            if (Profile.currentUser.getActiveReservation() != null) {
+                Toast.makeText(MainActivity.this, "Sorry, you may only hold one active reservation at a time.", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-            }
-            else {
-                Profile.currentUser.
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Make Reservation");
+            builder.setMessage(reservation.intervalString());
+            builder.setPositiveButton("Yes",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Profile.currentUser.addReservation(reservation);
+                            String uid = auth.getCurrentUser().getUid();
+                            DatabaseReference userRef = root.getReference("users/" + uid);
+                            userRef.setValue(Profile.currentUser);
+                        }
+                    });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {}
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     });
 
