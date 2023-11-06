@@ -10,9 +10,9 @@
     <TextView
         android:id="@+id/displayBuildingName"
         android:layout_width="190dp"
-        android:layout_height="48dp"
+        android:layout_height="36dp"
         android:layout_marginStart="190dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="FILLER LIBRARY"
         android:textSize="20sp" />
 
@@ -21,7 +21,7 @@
         android:layout_width="190dp"
         android:layout_height="36dp"
         android:layout_marginStart="190dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="55dp"
         android:text="FILLER"
         android:textSize="12sp" />
 
@@ -30,25 +30,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:entries="@array/weekdays"
         android:spinnerMode="dropdown" />
 
     <ListView
         android:id="@+id/intervalListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="330dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/intervalTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="200dp"
+        android:text="Select timeslots below."/>
 
     <Button
-        android:id="@+id/book"
+        android:id="@+id/bookButton"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="5dp"
-        android:text="BOOK RESERVATION" />
+        android:layout_marginTop="500dp"
+        android:layout_marginStart="20dp"
+        android:text="BOOK RESERVATION"/>
 
 </FrameLayout>

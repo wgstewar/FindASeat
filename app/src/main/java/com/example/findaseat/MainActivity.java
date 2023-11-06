@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager2 = findViewById(R.id.view_pager);
 
         viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPagerAdapter.addFragment(new Map());
+        viewPagerAdapter.addFragment(new Booking());
         viewPagerAdapter.addFragment(new Login());
         viewPagerAdapter.addFragment(new Profile());
         viewPagerAdapter.addFragment(new Register());
@@ -57,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            String uid = auth.getCurrentUser().getUid();
+            root.getReference("users/" + uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    Profile.currentUser = task.getResult().getValue(User.class);
+                }
+            });
+        }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -222,6 +231,15 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        Reservation r = Profile.currentUser.activeReservation();
+                        root.getReference("buildings/" + r.getBuildingId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                Building b = task.getResult().getValue(Building.class);
+                                for (int i = r.getStartTime(); i < r.getEndTime(); i++) b.addSeat(r.getDate().getWeekday(), i);
+                                root.getReference("buildings/" + r.getBuildingId()).setValue(b);
+                            }
+                        });
                         Profile.currentUser.cancelActiveReservation();
                         String uid = auth.getCurrentUser().getUid();
                         root.getReference("users/" + uid).setValue(Profile.currentUser);

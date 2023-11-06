@@ -24,6 +24,7 @@ public class Profile extends Fragment {
     public static User currentUser;
     public static DatabaseReference userRef;
     private ValueEventListener userListener;
+    private View inf;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -40,15 +41,15 @@ public class Profile extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         currentUser = snapshot.getValue(User.class);
                         if (currentUser != null) {
-                            TextView fullNameView = (TextView) getActivity().findViewById(R.id.displayFullName);
-                            TextView userInfoView = (TextView) getActivity().findViewById(R.id.displayUserInfo);
-                            TextView uscIdView = (TextView) getActivity().findViewById(R.id.displayUscId);
+                            TextView fullNameView = (TextView) inf.findViewById(R.id.displayFullName);
+                            TextView userInfoView = (TextView) inf.findViewById(R.id.displayUserInfo);
+                            TextView uscIdView = (TextView) inf.findViewById(R.id.displayUscId);
                             fullNameView.setText(currentUser.getFullName());
                             userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
                             uscIdView.setText("USC ID: #" + currentUser.getUscId());
 
-                            ReservationListAdapter adapter = new ReservationListAdapter(getActivity(), currentUser.getReservations());
-                            ListView reservationView = getActivity().findViewById(R.id.reservationView);
+                            ReservationListAdapter adapter = new ReservationListAdapter(getContext(), currentUser.getReservations());
+                            ListView reservationView = inf.findViewById(R.id.reservationView);
                             reservationView.setAdapter(adapter);
                         }
                     }
@@ -66,7 +67,7 @@ public class Profile extends Fragment {
             }
         });
 
-        View inf = inflater.inflate(R.layout.fragment_profile, container, false);
+        inf = inflater.inflate(R.layout.fragment_profile, container, false);
         return inf;
     }
 }
