@@ -82,9 +82,21 @@ public class User {
     }
 
     public void cancelActiveReservation() {
-        Reservation r = reservations.get(0);
+        Reservation r = getActiveReservation();
         if (r.getStatus() == ReservationStatus.ACTIVE) {
             r.setStatus(ReservationStatus.CANCELLED);
         }
+    }
+
+    public void updateActiveReservation(Reservation r) {
+
+    }
+
+    public Reservation getActiveReservation() {
+        Reservation r = reservations.get(0);
+        if (r.getStatus() == ReservationStatus.ACTIVE) {
+            return r;
+        }
+        return null;
     }
 }

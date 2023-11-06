@@ -25,69 +25,17 @@
         android:text="FILLER"
         android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/mon"
+    <Spinner
+        android:id="@+id/selectWeekday"
         android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="MONDAY"
-        android:onClick="displayMonday"/>
-
-    <Button
-        android:id="@+id/tue"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="TUESDAY"
-        android:onClick="displayTuesday"/>
-    <Button
-        android:id="@+id/wed"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="TUESDAY"
-        android:onClick="displayWednsday"/>
-
-    <Button
-        android:id="@+id/thur"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="MONDAY"
-        android:onClick="displayThurday"/>
-
-    <Button
-        android:id="@+id/fri"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="TUESDAY"
-        android:onClick="displayFriday"/>
-    <Button
-        android:id="@+id/sat"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="TUESDAY"
-        android:onClick="displaySaturday"/>
-
-    <Button
-        android:id="@+id/sun"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginStart="100dp"
-        android:text="TUESDAY"
-        android:onClick="displaySunday"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="150dp"
+        android:entries="@array/weekdays"
+        android:spinnerMode="dropdown" />
 
     <ListView
-        android:id="@+id/intervalView"
+        android:id="@+id/intervalListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
