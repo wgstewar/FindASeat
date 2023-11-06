@@ -9,16 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.findaseat.*;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class ReservationListAdapter extends ArrayAdapter<Reservation> {
-    private ArrayList<Reservation> dataSet;
-    Context mContext;
-
     public ReservationListAdapter(Context context, ArrayList<Reservation> reservations) {
         super(context, 0, reservations);
     }
@@ -35,11 +38,21 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
         TextView statusView = (TextView) convertView.findViewById(R.id.status);
         Button modifyButton = (Button) convertView.findViewById(R.id.modifyButton);
         Button cancelButton = (Button) convertView.findViewById(R.id.cancelButton);
+        int id = reservation.getBuildingId();
 
-        buildingNameView.setText("Leavey Library");
-        String date = reservation.getDate().toString();
-        String time = reservation.intervalString();
-        dateTimeView.setText(date + ", " + time);
+        FirebaseDatabase.getInstance().getReference("buildings/" + id).get().addOnCompleteListener(
+                new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                Building b = task.getResult().getValue(Building.class);
+                buildingNameView.setText(b.getName());
+
+                String date = reservation.getDate().toString();
+                String time = Reservation.intervalString(reservation.getStartTime()+b.getOpenTime(),
+                        reservation.getEndTime()+b.getOpenTime());
+                dateTimeView.setText(date + ", " + time);
+            }
+        });
 
         statusView.setText(reservation.getStatus().toString());
         if (reservation.getStatus() == ReservationStatus.ACTIVE) {

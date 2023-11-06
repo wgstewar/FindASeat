@@ -32,12 +32,12 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_interval, parent, false);
         }
 
-        double intervalStartTime;
+        /*double intervalStartTime;
         double intervalEndTime;
         //Getting accurate start time
         intervalStartTime = position/2.0 + building.getOpenTime();
         intervalEndTime = intervalStartTime + 0.5;
-        /*set am/pm*/
+        /*set am/pm
         String startExtension;
         String endExtension;
         if (intervalStartTime < 12.0){
@@ -64,7 +64,7 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
             intervalStartTimeString = parts[0];
             intervalStartTimeString += ":30" + startExtension;
             intervalEndTimeString += ":00" + endExtension;
-        }
+        }*/
 
         TextView timeView = (TextView) convertView.findViewById(R.id.timeView);
         TextView seatsAvailView = (TextView) convertView.findViewById(R.id.seatsAvailView);
@@ -72,7 +72,7 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
         Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
 
         seatsAvailView.setText(numAvail + " seats available.");
-        timeView.setText(intervalStartTimeString + " - " + intervalEndTimeString);
+        timeView.setText(Reservation.intervalString(position + building.getOpenTime(), position+1+ building.getOpenTime()));
 
         convertView.setBackgroundColor(Color.WHITE);
         if (shoppingCart.contains(position)) {
@@ -90,7 +90,7 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
                 addButton.setVisibility(View.INVISIBLE);
                 shoppingCart.add(position);
                 removeButton.setVisibility(View.VISIBLE);
-                //convertView.setBackgroundColor(Color.rgb(73, 242, 92));
+                // convertView.setBackgroundColor(Color.rgb(73, 242, 92));
             }
         });
         removeButton.setOnClickListener(new View.OnClickListener(){

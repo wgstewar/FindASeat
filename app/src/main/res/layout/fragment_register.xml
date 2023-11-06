@@ -98,7 +98,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="427dp"
         android:entries="@array/affiliations"
-        android:hint="USC ID #"
         android:spinnerMode="dropdown" />
 
     <Button

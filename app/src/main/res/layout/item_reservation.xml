@@ -44,7 +44,8 @@
         android:layout_height="42dp"
         android:layout_marginTop="55dp"
         android:layout_marginStart="100dp"
-        android:text="MODIFY" />
+        android:text="MODIFY"
+        android:onClick="modifyActiveReservation"/>
 
     <Button
         android:id="@+id/cancelButton"
