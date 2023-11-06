@@ -1,6 +1,8 @@
 package com.example.findaseat.Classes;
 
 
+import java.util.HashSet;
+
 public class Reservation {
     private int buildingId;
     private String uid;
@@ -69,5 +71,20 @@ public class Reservation {
         int startHr = startTime/2, startMinute = (startTime % 2 == 0) ? 0 : 30,
                 endHr = endTime/2, endMinute = (endTime % 2 == 0) ? 0 : 30;
         return String.format("%02d:%02d - %02d:%02d", startHr, startMinute, endHr, endMinute);
+    }
+
+    public static Reservation createReservation(int buildingId, HashSet<Integer> shoppingCart) {
+        int startTime = 48, endTime = 0;
+        for (Integer time : shoppingCart) {
+            startTime = (time < startTime) ? time : startTime;
+            endTime = (time > endTime) ? time : endTime;
+        }
+        if ((endTime - startTime + 1 == shoppingCart.size()) && (endTime-startTime + 1 <= 4)) {
+            Date d = new Date(2023, 11, 5, Weekday.MONDAY);
+            Reservation r = new Reservation(buildingId, d, startTime, endTime);
+            return r;
+        } else {
+            return null;
+        }
     }
 }
