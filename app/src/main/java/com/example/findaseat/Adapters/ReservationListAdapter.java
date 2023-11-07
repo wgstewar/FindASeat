@@ -47,10 +47,10 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
                 Building b = task.getResult().getValue(Building.class);
                 buildingNameView.setText(b.getName());
 
-                String date = reservation.getDate().toString();
+                String dow = reservation.getDow().toString();
                 String time = Reservation.intervalString(reservation.getStartTime()+b.getOpenTime(),
                         reservation.getEndTime()+b.getOpenTime());
-                dateTimeView.setText(date + ", " + time);
+                dateTimeView.setText(dow + ", " + time);
             }
         });
 

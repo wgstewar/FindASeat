@@ -103,6 +103,7 @@ public class Booking extends Fragment {
                 if (b != null){
                     a.clear();
                     a.addAll(b.getAvailability().get(dayOfWeek.toString()));
+                    shoppingCart.clear();
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -122,7 +123,7 @@ public class Booking extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Reservation r = Reservation.createReservation(buildingId, shoppingCart);
+                Reservation r = Reservation.createReservation(buildingId, shoppingCart, dayOfWeek);
                 if (r == null) {
                     TextView tv = (TextView) inf.findViewById(R.id.intervalTip);
                     tv.setTextColor(Color.RED);
@@ -168,4 +169,6 @@ public class Booking extends Fragment {
         return inf;
     }
 }
+
+
 
