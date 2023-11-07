@@ -123,7 +123,7 @@ public class Booking extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Reservation r = Reservation.createReservation(buildingId, shoppingCart, dayOfWeek);
+                Reservation r = Reservation.createReservation(buildingId, shoppingCart);
                 if (r == null) {
                     TextView tv = (TextView) inf.findViewById(R.id.intervalTip);
                     tv.setTextColor(Color.RED);
@@ -169,6 +169,4 @@ public class Booking extends Fragment {
         return inf;
     }
 }
-
-
 

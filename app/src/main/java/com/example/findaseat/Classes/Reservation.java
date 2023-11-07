@@ -9,7 +9,6 @@ public class Reservation {
     private int startTime;
     private int endTime;
     private ReservationStatus status;
-    private Weekday dow;
 
     public Reservation() {
         buildingId = -1;
@@ -17,16 +16,14 @@ public class Reservation {
         startTime = -1;
         endTime = -1;
         status = ReservationStatus.ERROR;
-        dow = Weekday.MONDAY;
     }
 
-    public Reservation(int buildingId, Date date, int startTime, int endTime, Weekday dow) {
+    public Reservation(int buildingId, Date date, int startTime, int endTime) {
         this.buildingId = buildingId;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = ReservationStatus.ACTIVE;
-        this.dow = dow;
     }
 
     public int getBuildingId() {
@@ -49,10 +46,6 @@ public class Reservation {
         return status;
     }
 
-    public Weekday getDow() {
-        return dow;
-    }
-
     public void setBuildingId(int buildingId) {
         this.buildingId = buildingId;
     }
@@ -73,19 +66,15 @@ public class Reservation {
         this.status = status;
     }
 
-    public void setDow(Weekday dow) {
-        this.dow = dow;
-    }
-
-    public static Reservation createReservation(int buildingId, HashSet<Integer> shoppingCart, Weekday dow) {
+    public static Reservation createReservation(int buildingId, HashSet<Integer> shoppingCart) {
         int startTime = 48, endTime = 0;
         for (Integer time : shoppingCart) {
             startTime = (time < startTime) ? time : startTime;
             endTime = (time > endTime) ? time : endTime;
         }
         if ((endTime - startTime + 1 == shoppingCart.size()) && (endTime-startTime + 1 <= 4)) {
-            Date d = new Date(2023, 11, 5, dow);
-            Reservation r = new Reservation(buildingId, d, startTime, endTime+1, dow);
+            Date d = new Date(2023, 11, 5, Weekday.MONDAY);
+            Reservation r = new Reservation(buildingId, d, startTime, endTime+1);
             return r;
         } else {
             return null;
