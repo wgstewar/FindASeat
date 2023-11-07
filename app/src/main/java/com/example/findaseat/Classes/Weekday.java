@@ -6,19 +6,19 @@ public enum Weekday {
     public String getString() {
         switch (this) {
             case SUNDAY:
-                return "Sunday";
+                return "SUNDAY";
             case MONDAY:
-                return "Monday";
+                return "MONDAY";
             case TUESDAY:
-                return "Tuesday";
+                return "TUESDAY";
             case WEDNESDAY:
-                return "Wednesday";
+                return "WEDNESDAY";
             case THURSDAY:
-                return "Thursday";
+                return "THURSDAY";
             case FRIDAY:
-                return "Friday";
+                return "FRIDAY";
             case SATURDAY:
-                return "Saturday";
+                return "SATURDAY";
             default:
                 return "Invalid Weekday";
         }

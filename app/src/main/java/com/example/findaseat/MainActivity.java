@@ -278,7 +278,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 Building b = task.getResult().getValue(Building.class);
                                 ListView lv = modifyDialog.findViewById(R.id.modifyIntervalList);
-                                ArrayList<Integer> avail = b.getAvailability().get(r.getDate().getWeekday().toString());
+//                                ArrayList<Integer> avail = b.getAvailability().get(r.getDate().getWeekday().toString());
+                                ArrayList<Integer> avail = b.getAvailability().get(r.getDow().toString());
                                 for (int i = r.getStartTime(); i < r.getEndTime(); i++) {
                                     shoppingCart.add(i);
                                 }
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
         confirmModifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Reservation valid = Reservation.createReservation(r.getBuildingId(), shoppingCart);
+                Reservation valid = Reservation.createReservation(r.getBuildingId(), shoppingCart, r.getDow().toString());
                 if (valid == null) {
                     TextView tv = (TextView) modifyDialog.findViewById(R.id.modifyTip);
                     tv.setText("Select up to 4 consecutive intervals!");
