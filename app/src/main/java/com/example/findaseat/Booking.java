@@ -103,6 +103,7 @@ public class Booking extends Fragment {
                 if (b != null){
                     a.clear();
                     a.addAll(b.getAvailability().get(dayOfWeek.toString()));
+                    shoppingCart.clear();
                     adapter.notifyDataSetChanged();
                 }
             }
