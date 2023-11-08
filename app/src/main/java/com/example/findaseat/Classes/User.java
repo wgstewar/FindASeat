@@ -89,12 +89,13 @@ public class User {
     }
 
     public void updateActiveReservation(Reservation r) {
-        if (reservations.size() > 0 && reservations.get(0).getStatus() == ReservationStatus.ACTIVE) {
+        if (!reservations.isEmpty() && reservations.get(0).getStatus() == ReservationStatus.ACTIVE) {
             reservations.set(0, r);
         }
     }
 
     public Reservation activeReservation() {
+        if (reservations.isEmpty()) return null;
         Reservation r = reservations.get(0);
         if (r.getStatus() == ReservationStatus.ACTIVE) {
             return r;

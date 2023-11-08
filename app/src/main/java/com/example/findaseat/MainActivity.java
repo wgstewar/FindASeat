@@ -211,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
                             User newUser = new User(fullName, uscId, username, email, affiliation);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, new Register()).commit();
                             viewPager2.setCurrentItem(2);
                         } else {
                             Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
