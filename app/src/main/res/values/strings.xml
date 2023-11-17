@@ -10,6 +10,10 @@
         <item>Faculty</item>
         <item>Staff</item>
     </string-array>
+    <string name="map_key" translatable="false">
+        AIzaSyBri1wY51KgI9zYA5ZGLAESRJO7OJrm0k8
+    </string>
+
 
     <string-array name="weekdays">
         <item>MONDAY</item>
@@ -20,4 +24,7 @@
         <item>SATURDAY</item>
         <item>SUNDAY</item>
     </string-array>
+
+
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

@@ -35,31 +35,14 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
-    ViewPager2 viewPager2;
-    ViewPagerAdapter viewPagerAdapter;
+    public static ViewPager2 viewPager2;
+    public static ViewPagerAdapter viewPagerAdapter;
     private FirebaseDatabase root;
     private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        // Get a reference to our posts
-        int iddd = 1;
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("buildings/" + iddd);
-
-        // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Post post = dataSnapshot.getValue(Post.class);
-
-            }
-
-
-
 
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.tab_layout);
@@ -353,6 +336,15 @@ public class MainActivity extends AppCompatActivity {
         Booking fg = new Booking();
         Bundle bd = new Bundle();
         bd.putInt("buildingId", 2);
+        fg.setArguments(bd);
+        viewPagerAdapter.addFragment(fg);
+        viewPager2.setCurrentItem(4, false);
+    }
+
+    public static void startBooking(int bid) {
+        Booking fg = new Booking();
+        Bundle bd = new Bundle();
+        bd.putInt("buildingId", bid);
         fg.setArguments(bd);
         viewPagerAdapter.addFragment(fg);
         viewPager2.setCurrentItem(4, false);
