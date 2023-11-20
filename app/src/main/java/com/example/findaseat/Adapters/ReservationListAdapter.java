@@ -60,6 +60,16 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
             modifyButton.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
         } else {
+            switch (reservation.getStatus()) {
+                case COMPLETED:
+                    convertView.setBackgroundColor(Color.rgb(196,196,196));
+                    break;
+                case CANCELLED:
+                    convertView.setBackgroundColor(Color.rgb(255,143,148));
+                    break;
+                default:
+                    convertView.setBackgroundColor(Color.rgb(255, 255, 255));
+            }
             modifyButton.setVisibility(View.INVISIBLE);
             cancelButton.setVisibility(View.INVISIBLE);
 

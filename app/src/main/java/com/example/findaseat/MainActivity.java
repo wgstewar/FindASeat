@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        auth.signOut();
         if (auth.getCurrentUser() != null) {
             String uid = auth.getCurrentUser().getUid();
             root.getReference("users/" + uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -121,7 +122,12 @@ public class MainActivity extends AppCompatActivity {
         String email = enterEmail.getText().toString();
         EditText enterPassword = (EditText) findViewById(R.id.enterPassword);
         String pwd = enterPassword.getText().toString();
-
+        TextView loginTip = (TextView) findViewById(R.id.loginTip);
+        if (email.isEmpty() || pwd.isEmpty()) {
+            loginTip.setText("Please enter your email and password!");
+            loginTip.setTextColor(Color.RED);
+            return;
+        }
         auth.signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -132,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             viewPager2.setCurrentItem(2);
                         } else {
-                            Toast.makeText(MainActivity.this, "Login failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            loginTip.setText("Invalid email/password combination.");
+                            loginTip.setTextColor(Color.RED);
                             enterPassword.setText("");
                         }
                     }

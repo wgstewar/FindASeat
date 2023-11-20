@@ -31,6 +31,7 @@ public class Profile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
 

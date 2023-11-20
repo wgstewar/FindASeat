@@ -24,7 +24,7 @@ public class UserTest extends TestCase {
     }
 
     @Test
-    public void addReservation_AddReservationBasic() {
+    public void addReservation_Basic() {
         Date d = new Date(LocalDate.now());
         Reservation r1 = new Reservation(1, d, 0, 4);
         r1.setStatus(ReservationStatus.COMPLETED);
@@ -43,13 +43,15 @@ public class UserTest extends TestCase {
     public void addReservation_AlreadyActive() {
         Date d = new Date(LocalDate.now());
         Reservation r1 = new Reservation(1, d, 0, 4);
-        u.addReservation(r1);
+        boolean added = u.addReservation(r1);
+        assertTrue(added);
+
         Reservation r2 = new Reservation(1, d, 5, 10);
-        boolean added = u.addReservation(r2);
+        added = u.addReservation(r2);
+        assertFalse(added);
 
         Reservation addedR = u.getReservations().get(0);
         assertFalse(r2.equals(addedR));
-        assertFalse(added);
     }
 
     @Test
