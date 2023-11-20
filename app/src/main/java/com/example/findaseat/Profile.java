@@ -17,6 +17,8 @@ import com.example.findaseat.Classes.*;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.time.ZonedDateTime;
+
 public class Profile extends Fragment {
     private FirebaseAuth auth;
     private FirebaseDatabase root;
@@ -41,6 +43,8 @@ public class Profile extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         currentUser = snapshot.getValue(User.class);
                         if (currentUser != null) {
+                            boolean update = Profile.currentUser.updateActiveReservation(ZonedDateTime.now());
+                            if (update) userRef.setValue(Profile.currentUser);
                             TextView fullNameView = (TextView) inf.findViewById(R.id.displayFullName);
                             TextView userInfoView = (TextView) inf.findViewById(R.id.displayUserInfo);
                             TextView uscIdView = (TextView) inf.findViewById(R.id.displayUscId);

@@ -1,6 +1,10 @@
 package com.example.findaseat.Classes;
 
 
+import androidx.annotation.Nullable;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashSet;
 
 public class Reservation {
@@ -12,7 +16,7 @@ public class Reservation {
 
     public Reservation() {
         buildingId = -1;
-        date = new Date();
+        date = new Date(LocalDate.now());
         startTime = -1;
         endTime = -1;
         status = ReservationStatus.ERROR;
@@ -66,6 +70,12 @@ public class Reservation {
         this.status = status;
     }
 
+    public boolean equals(Reservation other) {
+        return (buildingId == other.buildingId) &&
+        (date.equals(other.date)) && (startTime == other.startTime) &&
+                (endTime == other.endTime) && (status == other.status);
+    }
+
     public static Reservation createReservation(int buildingId, HashSet<Integer> shoppingCart) {
         int startTime = 48, endTime = 0;
         for (Integer time : shoppingCart) {
@@ -73,7 +83,8 @@ public class Reservation {
             endTime = (time > endTime) ? time : endTime;
         }
         if ((endTime - startTime + 1 == shoppingCart.size()) && (endTime-startTime + 1 <= 4)) {
-            Date d = new Date(2023, 11, 5, Weekday.MONDAY);
+
+            Date d = new Date(LocalDate.now());
             Reservation r = new Reservation(buildingId, d, startTime, endTime+1);
             return r;
         } else {

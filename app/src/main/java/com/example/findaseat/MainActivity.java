@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -81,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser currentUser = auth.getCurrentUser();
                     if (currentUser != null) {
                         pos = 2;
+                        if (Profile.currentUser != null) {
+                            boolean update = Profile.currentUser.updateActiveReservation(ZonedDateTime.now());
+                            if (update) {
+                                String uid = currentUser.getUid();
+                                FirebaseDatabase.getInstance().getReference("users/" + uid).setValue(Profile.currentUser);
+                            }
+                        }
                     }
                 }
                 viewPager2.setCurrentItem(pos, false);

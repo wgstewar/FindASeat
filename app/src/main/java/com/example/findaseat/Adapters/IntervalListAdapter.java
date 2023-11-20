@@ -2,6 +2,7 @@ package com.example.findaseat.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -38,6 +40,15 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
         Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
 
         seatsAvailView.setText(numAvail + " seats available.");
+
+        int nowInterval = ZonedDateTime.now().getHour() * 2;
+        nowInterval += ZonedDateTime.now().getMinute() / 30;
+        if (position + building.getOpenTime() < nowInterval) {
+            addButton.setEnabled(false);
+        } else {
+            addButton.setEnabled(true);
+        }
+
         timeView.setText(Reservation.intervalString(position + building.getOpenTime(), position+1+ building.getOpenTime()));
 
         convertView.setBackgroundColor(Color.WHITE);

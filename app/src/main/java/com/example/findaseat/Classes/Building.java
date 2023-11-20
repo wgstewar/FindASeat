@@ -68,9 +68,6 @@ public class Building {
         this.availability = availability;
     }
 
-    public Reservation makeReservation(int start, int close, int day) {return new Reservation();
-    }
-
     public void addSeat(Weekday wkday, int interval) {
         int currSeats = availability.get(wkday.toString()).get(interval);
         availability.get(wkday.toString()).set(interval, currSeats+1);

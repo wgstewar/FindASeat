@@ -4,6 +4,7 @@ import androidx.collection.CircularArray;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 public class User {
@@ -74,11 +75,14 @@ public class User {
         this.affiliation = affiliation;
     }
 
-    public void addReservation(Reservation r) {
+    public boolean addReservation(Reservation r) {
+        if (activeReservation() != null)
+            return false;
         if (reservations.size() == 20) {
             reservations.remove(19);
         }
         reservations.add(0, r);
+        return true;
     }
 
     public void cancelActiveReservation() {
@@ -101,5 +105,17 @@ public class User {
             return r;
         }
         return null;
+    }
+
+    public boolean updateActiveReservation(ZonedDateTime time) {
+        if (reservations.isEmpty()) return false;
+        Reservation r = reservations.get(0);
+        int nowInterval = time.getHour() * 2;
+        nowInterval += time.getMinute() / 30;
+        if (r.getEndTime() <= nowInterval) {
+            r.setStatus(ReservationStatus.COMPLETED);
+            return true;
+        }
+        return false;
     }
 }
