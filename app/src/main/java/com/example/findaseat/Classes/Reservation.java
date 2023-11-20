@@ -3,7 +3,6 @@ package com.example.findaseat.Classes;
 
 import androidx.annotation.Nullable;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashSet;
 

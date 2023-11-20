@@ -15,7 +15,7 @@ android {
         task wrapper(type: Wrapper){
             gradleVersion = '7.2'
         }
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     testOptions {
@@ -46,7 +46,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'androidx.test.ext:junit:1.1.5'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.4.0") {
+        exclude module: "protobuf-lite"
+    }
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
 }

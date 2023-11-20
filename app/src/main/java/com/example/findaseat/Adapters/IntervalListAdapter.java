@@ -13,7 +13,8 @@ import android.widget.TextView;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -41,9 +42,10 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
 
         seatsAvailView.setText(numAvail + " seats available.");
 
-        int nowInterval = ZonedDateTime.now().getHour() * 2;
-        nowInterval += ZonedDateTime.now().getMinute() / 30;
-        if (position + building.getOpenTime() < nowInterval) {
+        LocalTime nowTime = LocalTime.now();
+        int endInterval = position + 1 + building.getOpenTime();
+        LocalTime endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
+        if (nowTime.isAfter(endTime)) {
             addButton.setEnabled(false);
         } else {
             addButton.setEnabled(true);

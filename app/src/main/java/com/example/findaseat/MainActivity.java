@@ -29,6 +29,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     if (currentUser != null) {
                         pos = 2;
                         if (Profile.currentUser != null) {
-                            boolean update = Profile.currentUser.updateActiveReservation(ZonedDateTime.now());
+                            boolean update = Profile.currentUser.updateActiveReservation(LocalTime.now());
                             if (update) {
                                 String uid = currentUser.getUid();
                                 FirebaseDatabase.getInstance().getReference("users/" + uid).setValue(Profile.currentUser);
@@ -305,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                     tv.setTextColor(Color.RED);
                 } else {
                     Log.d("hmm", valid.getStartTime() + " " + valid.getEndTime());
-                    Profile.currentUser.updateActiveReservation(valid);
+                    Profile.currentUser.modifyActiveReservation(valid);
                     String uid = auth.getCurrentUser().getUid();
                     root.getReference("users/" + uid).setValue(Profile.currentUser);
                     root.getReference("buildings/" + r.getBuildingId())

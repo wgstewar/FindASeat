@@ -41,7 +41,7 @@ public class Map extends Fragment {
             buildingMap.put("Fertitta Hall", 10);
 
             LatLng usc = new LatLng(34.022415, -118.285530);
-            gm.moveCamera(CameraUpdateFactory.newLatLngZoom(usc, 14.0f));
+            gm.moveCamera(CameraUpdateFactory.newLatLngZoom(usc, 15.0f));
 
             //1 add marker Leavey Library
             LatLng leavey = new LatLng(34.02192542827415, -118.28290795537238);

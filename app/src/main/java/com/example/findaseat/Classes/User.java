@@ -1,10 +1,6 @@
 package com.example.findaseat.Classes;
 
-import androidx.collection.CircularArray;
-
-import com.google.firebase.database.DatabaseReference;
-
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class User {
@@ -87,12 +83,12 @@ public class User {
 
     public void cancelActiveReservation() {
         Reservation r = activeReservation();
-        if (r.getStatus() == ReservationStatus.ACTIVE) {
+        if (r != null && r.getStatus() == ReservationStatus.ACTIVE) {
             r.setStatus(ReservationStatus.CANCELLED);
         }
     }
 
-    public void updateActiveReservation(Reservation r) {
+    public void modifyActiveReservation(Reservation r) {
         if (!reservations.isEmpty() && reservations.get(0).getStatus() == ReservationStatus.ACTIVE) {
             reservations.set(0, r);
         }
@@ -107,12 +103,12 @@ public class User {
         return null;
     }
 
-    public boolean updateActiveReservation(ZonedDateTime time) {
+    public boolean updateActiveReservation(LocalTime nowTime) {
         if (reservations.isEmpty()) return false;
         Reservation r = reservations.get(0);
-        int nowInterval = time.getHour() * 2;
-        nowInterval += time.getMinute() / 30;
-        if (r.getEndTime() <= nowInterval) {
+        int endInterval = r.getEndTime();
+        LocalTime endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
+        if (nowTime.isAfter(endTime)) {
             r.setStatus(ReservationStatus.COMPLETED);
             return true;
         }
