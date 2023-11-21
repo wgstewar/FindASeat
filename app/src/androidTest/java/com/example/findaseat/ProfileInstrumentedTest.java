@@ -209,4 +209,92 @@ public class ProfileInstrumentedTest {
                 .inAdapterView(withId(R.id.reservationView))
                 .atPosition(0).onChildView(withId(R.id.status)).check(matches(withText("CANCELLED")));
     }
+
+    @Test
+    public void Test5_register_EmptyFieldsUser() {
+        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.registerLink)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.register_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.registerButton)).perform(click());
+        onView(withId(R.id.registerTip)).check(matches(withText("Please correct the following fields.")));
+    }
+
+    @Test
+    public void Test6_register_NewValidUser() {
+        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
+        /* Register */
+        onView(withId(R.id.registerLink)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.register_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.enterUsername)).perform(typeText("willgranger"));
+        onView(withId(R.id.enterPassword)).perform(typeText("blahblah"));
+        onView(withId(R.id.reenterPassword)).perform(typeText("blahblah"));
+        onView(withId(R.id.enterFullName)).perform(typeText("Will Stewart"));
+        onView(withId(R.id.enterEmail)).perform(typeText("wgstewar@usc.edu"));
+        onView(withId(R.id.enterUscId)).perform(typeText("1234567899"), closeSoftKeyboard());
+        onView(withId(R.id.enterAffiliation)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Undergraduate"))).perform(click());
+
+        onView(withId(R.id.registerButton)).perform(click());
+
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.displayFullName)).check(matches(withText("Will Stewart")));
+    }
+
+    @Test
+    public void Test7_register_logout_login() {
+        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
+        /* Register */
+        onView(withId(R.id.registerLink)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.register_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.enterUsername)).perform(typeText("jlo"));
+        onView(withId(R.id.enterPassword)).perform(typeText("blahblah"));
+        onView(withId(R.id.reenterPassword)).perform(typeText("blahblah"));
+        onView(withId(R.id.enterFullName)).perform(typeText("Jennifer Lopez"));
+        onView(withId(R.id.enterEmail)).perform(typeText("jlopez@usc.edu"));
+        onView(withId(R.id.enterUscId)).perform(typeText("1234567899"), closeSoftKeyboard());
+        onView(withId(R.id.enterAffiliation)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Undergraduate"))).perform(click());
+
+        onView(withId(R.id.registerButton)).perform(click());
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        /* Logout */
+        onView(withId(R.id.logoutLink)).perform(click());
+        onView(withText("Profile")).perform(click());
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+
+        /* Login with newly created account */
+        onView(withId(R.id.enterEmail)).perform(typeText("jlopez@usc.edu"));
+        onView(withId(R.id.enterPassword)).perform(typeText("blahblah"), closeSoftKeyboard());
+        onView(withId(R.id.loginButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.displayFullName)).check(matches(withText("Jennifer Lopez")));
+    }
+
 }
