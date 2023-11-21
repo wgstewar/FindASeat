@@ -62,20 +62,69 @@ public class BookingInstrumentedTest {
 
 
     @Test
-    public void Test1_bookOneReservation() {
+    public void Test1_cancelReservationButton() {
         /* START BOOKING PAGE */
         activityScenarioRule.getScenario().onActivity(activity -> {
             activity.startBooking(1);
         });
 
-
         /* Add Reservation to 'shopping cart' */
+        try {
+            onData(anything())
+                    .inAdapterView(withId(R.id.intervalListView))
+                    .atPosition(2)
+                    .onChildView(withId(R.id.addButton))
+                    .perform(click());
+        } catch (NoMatchingDataException e) {
+        // in case add button isn't there
+        }
+        /* Click BOOK RESERVATION Button */
+        try {
+            onView(withId(R.id.bookButton)).perform(click());
+        } catch (NoMatchingViewException e) {
+            // Active Reservation already existed
+        }
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
+        /* Click Yes */
+        try {
+            onView(withText("Yes"))
+                    .inRoot(isDialog())
+                    .perform(click());
+        } catch (NoMatchingViewException e) {
+            // Active Reservation already existed
+        }
+
+        /* Return to Profile to check for Reservation */
+        onView(withText("Profile")).perform(click());
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
+                onChildView(withId(R.id.cancelButton)).
+                perform(click());
+        /* Check that Cancel confirmation pop up shows up */
+        onView(withText("Cancel"))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+        /* Click Yes */
+        onView(withText("Yes"))
+                .inRoot(isDialog())
+                .perform(click());
+        onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
+                onChildView(withId(R.id.status)).
+                check(matches(withText("CANCELLED")));
     }
 
     @Test
-    public void Test2_cancelReservationButton() {
-      /* Add Reservation to 'shopping cart' */
+    public void Test2_bookOneReservation() {
+        /* START BOOKING PAGE */
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(1);
+        });
+        /* Add Reservation to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
                 .atPosition(2)
@@ -92,28 +141,111 @@ public class BookingInstrumentedTest {
         onView(withText("Make Reservation?"))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
-
         /* Click Yes */
         onView(withText("Yes"))
                 .inRoot(isDialog())
                 .perform(click());
 
+        /* Return to Profile to check for Reservation */
         onView(withText("Profile")).perform(click());
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
+                onChildView(withId(R.id.buildingName)).
+                check(matches(withText("Leavey Library")));
 
-        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
+        /* CANCEL RESERVATION SO FOLLOWING TESTS CAN RUN */
+        /* Return to Profile to cancel reservation */
 
-        onView(withId(R.id.enterEmail)).perform(typeText("sxfan@usc.edu"));
-        onView(withId(R.id.enterPassword)).perform(typeText("123456"));
-        onView(withId(R.id.loginButton)).perform(click());
+        onView(withText("Profile")).perform(click());
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        try {
+            onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
+                    onChildView(withId(R.id.cancelButton)).
+                    perform(click());
+        } catch (NoMatchingDataException e) {
+            // in case reservation isn't there
+        }
+        /* Click Yes */
+        try {
+            onView(withText("Yes"))
+                    .inRoot(isDialog())
+                    .perform(click());
+        } catch (NoMatchingViewException e) {
+            // in case reservation isn't there
+        }
+    }
+
+    @Test
+    public void Test3_BookFiveReservations() {
+        /* START BOOKING PAGE */
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(1);
+        });
+        /* Add 5 Reservation to 'shopping cart' */
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(2)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(3)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(4)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(5)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(6)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        /* Click BOOK RESERVATION Button */
+        onView(withId(R.id.bookButton)).perform(click());
         try {
             sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        onView(withId(R.id.intervalTip)).check(matches(withText("Select up to 4 consecutive intervals!")));
 
-        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
-        onView(withId(R.id.displayFullName)).check(matches(withText("Sammie Fan")));
     }
-}
 
+    @Test
+    public void Test4_bookNonConsecutiveReservations() {
+        /* START BOOKING PAGE */
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(1);
+        });
+        /* Add Non Consecutive Reservations to 'shopping cart' */
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(2)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(4)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+        /* Click BOOK RESERVATION Button */
+        onView(withId(R.id.bookButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.intervalTip)).check(matches(withText("Select up to 4 consecutive intervals!")));
+    }
+
+
+
+}
 
