@@ -211,7 +211,7 @@ public class ProfileInstrumentedTest {
     }
 
     @Test
-    public void Test5_register_EmptyFieldsUser() {
+    public void Test6_register_EmptyFieldsUser() {
         onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
 
         onView(withId(R.id.registerLink)).perform(click());
@@ -226,7 +226,7 @@ public class ProfileInstrumentedTest {
     }
 
     @Test
-    public void Test6_register_NewValidUser() {
+    public void Test7_register_NewValidUser() {
         onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
         /* Register */
         onView(withId(R.id.registerLink)).perform(click());
@@ -257,7 +257,7 @@ public class ProfileInstrumentedTest {
     }
 
     @Test
-    public void Test7_register_logout_login() {
+    public void Test8_register_logout_login() {
         onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
         /* Register */
         onView(withId(R.id.registerLink)).perform(click());
