@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static ViewPagerAdapter viewPagerAdapter;
     private FirebaseDatabase root;
     private FirebaseAuth auth;
+    private int open;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager2.setAdapter(viewPagerAdapter);
         viewPager2.setUserInputEnabled(false);
-        viewPager2.setOffscreenPageLimit(1);
 
         root = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (viewPagerAdapter.getItemCount() == 5) {
+                while (viewPagerAdapter.getItemCount() > 4) {
                     viewPagerAdapter.destroyBookingPg();
                 }
                 int pos = tab.getPosition();
@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(MainActivity.this, "Successful sign-in.",
                                     Toast.LENGTH_SHORT).show();
-                            viewPager2.setCurrentItem(2);
+                            viewPager2.setCurrentItem(2, false);
+                            enterEmail.setText("");
+                            enterPassword.setText("");
                         } else {
                             loginTip.setText("Invalid email/password combination.");
                             loginTip.setTextColor(Color.RED);
@@ -228,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                             User newUser = new User(fullName, uscId, username, email, affiliation);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
-                            viewPager2.setCurrentItem(2);
+                            viewPager2.setCurrentItem(2, false);
                         } else {
                             Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
                         }
@@ -263,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 Building b = task.getResult().getValue(Building.class);
-                                for (int i = r.getStartTime(); i < r.getEndTime(); i++) b.addSeat(r.getDate().getWeekday(), i);
+                                for (int i = r.getStartTime(); i < r.getEndTime(); i++) b.addSeat(r.getDate().getWeekday(), i-b.getOpenTime());
                                 root.getReference("buildings/" + r.getBuildingId()).setValue(b);
                             }
                         });
@@ -296,17 +298,18 @@ public class MainActivity extends AppCompatActivity {
                                 ListView lv = modifyDialog.findViewById(R.id.modifyIntervalList);
                                 ArrayList<Integer> avail = b.getAvailability().get(r.getDate().getWeekday().toString());
                                 for (int i = r.getStartTime(); i < r.getEndTime(); i++) {
-                                    shoppingCart.add(i);
+                                    shoppingCart.add(i-b.getOpenTime());
                                 }
                                 IntervalListAdapter adapter = new IntervalListAdapter(MainActivity.this, avail, b, shoppingCart);
                                 lv.setAdapter(adapter);
+                                open = b.getOpenTime();
                             }
                         });
         Button confirmModifyBtn = (Button) modifyDialog.findViewById(R.id.confirmModifyButton);
         confirmModifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Reservation valid = Reservation.createReservation(r.getBuildingId(), shoppingCart);
+                Reservation valid = Reservation.createReservation(r.getBuildingId(), open, shoppingCart);
                 if (valid == null) {
                     TextView tv = (TextView) modifyDialog.findViewById(R.id.modifyTip);
                     tv.setText("Select up to 4 consecutive intervals!");
@@ -323,9 +326,9 @@ public class MainActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                             Building b = task.getResult().getValue(Building.class);
                                             for (int i = r.getStartTime(); i < r.getEndTime(); i++)
-                                                b.addSeat(r.getDate().getWeekday(),i);
+                                                b.addSeat(r.getDate().getWeekday(),i-b.getOpenTime());
                                             for (int i = valid.getStartTime(); i < valid.getEndTime(); i++)
-                                                b.removeSeat(valid.getDate().getWeekday(),i);
+                                                b.removeSeat(valid.getDate().getWeekday(),i-b.getOpenTime());
                                             root.getReference("buildings/" + r.getBuildingId()).setValue(b);
                                         }
                                     });

@@ -1,9 +1,8 @@
 package com.example.findaseat;
 
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -56,12 +55,20 @@ public class Booking extends Fragment {
     ArrayList<Integer> a = new ArrayList<>();
     private Spinner selectWeekdaySpinner;
     private IntervalListAdapter adapter;
+    private Context ctx;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bd = getArguments();
         buildingId = bd.getInt("buildingId");
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.ctx = context;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -73,7 +80,7 @@ public class Booking extends Fragment {
                 b = task.getResult().getValue(Building.class);
                 a = b.getAvailability().get("MONDAY");
                 ListView myList = inf.findViewById(R.id.intervalListView);
-                adapter = new IntervalListAdapter(getApplicationContext(), a, b, shoppingCart);
+                adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart);
                 myList.setAdapter(adapter);
 
                 TextView nameView = (TextView) inf.findViewById(R.id.displayBuildingName);
@@ -125,7 +132,7 @@ public class Booking extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Reservation r = Reservation.createReservation(buildingId, shoppingCart);
+                Reservation r = Reservation.createReservation(buildingId, b.getOpenTime(), shoppingCart);
                 if (r == null) {
                     TextView tv = (TextView) inf.findViewById(R.id.intervalTip);
                     tv.setTextColor(Color.RED);
@@ -133,14 +140,14 @@ public class Booking extends Fragment {
                     return;
                 }
                 if (Profile.currentUser.activeReservation() != null) {
-                    Toast.makeText(getApplicationContext(), "Sorry, you may only hold one active reservation at a time.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx, "Sorry, you may only hold one active reservation at a time.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                 builder.setTitle("Make Reservation?");
                 builder.setMessage(Reservation.intervalString(
-                        r.getStartTime() + b.getOpenTime(), b.getOpenTime()+r.getEndTime()));
+                        r.getStartTime(), r.getEndTime()));
                 builder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -150,13 +157,12 @@ public class Booking extends Fragment {
                                 FirebaseDatabase.getInstance().getReference("users/" + uid).setValue(Profile.currentUser);
 
                                 for (int j = r.getStartTime(); j < r.getEndTime(); j++) {
-                                    b.removeSeat(dayOfWeek, j);
-                                    Log.d("hello,","xd "+b.getAvailability().get(dayOfWeek.toString()).get(j));
+                                    b.removeSeat(dayOfWeek, j-b.getOpenTime());
                                 }
                                 FirebaseDatabase.getInstance().getReference("buildings/" + buildingId).setValue(b);
                                 shoppingCart.clear();
                                 adapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), "Reservation created!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ctx, "Reservation created!", Toast.LENGTH_LONG).show();
                             }
                         });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
