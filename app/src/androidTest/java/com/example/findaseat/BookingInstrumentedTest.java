@@ -57,33 +57,13 @@ public class ProfileInstrumentedTest {
         }
         /* RETURN TO MAP */
         onView(withText("Map")).perform(click());
-
-        /* START BOOKING PAGE */
-
-        // Get references to the existing ViewPager2 and its adapter
-        ViewPager2 viewPager2 = activityActivityTestRule.getActivity().findViewById(R.id.view_pager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(activityActivityTestRule.getActivity());
-
-        // Set the adapter to the ViewPager2
-        viewPager2.setAdapter(viewPagerAdapter);
-
-        // Create a fragment instance
-        Booking bookingfragment = new Booking();
-
-        // Set arguments for the bookingfragment
-        Bundle bundle = new Bundle();
-        bundle.putInt("buildingId", 5);
-        bookingfragment.setArguments(bundle);
-
-        viewPagerAdapter.addFragment(bookingfragment);
-        viewPagerAdapter.notifyDataSetChanged();
-        viewPager2.setCurrentItem(viewPagerAdapter.getItemCount() - 1, false);
-
     }
 
 
     @Test
     public void Test1_bookOneReservation() {
+        /* START BOOKING PAGE */
+        activityScenarioRule.scenario.onActivity { it.startBooking(1) }
         /* Add Reservation to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
