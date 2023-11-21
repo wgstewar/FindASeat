@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,4 +104,112 @@ public class UserTest extends TestCase {
         u.updateActiveReservation(t);
         assertEquals(ReservationStatus.COMPLETED, u.getReservations().get(0).getStatus());
     }
+
+    @Test
+    public void activeReservationSetCorrectly() {
+        Date d = new Date(LocalDate.now());
+        Reservation r2 = new Reservation(1, d, 5, 10);
+        boolean added = u.addReservation(r2);
+        Reservation activeR = new Reservation(1, d, 5, 10);
+        assertTrue(u.activeReservation().equals(activeR));
+        assertTrue(added);
+    }
+
+    @Test
+    public void cancelReservation() {
+        Date d = new Date(LocalDate.now());
+        Reservation r2 = new Reservation(1, d, 5, 10);
+        boolean added = u.addReservation(r2);
+        u.cancelActiveReservation();
+        assertEquals(ReservationStatus.CANCELLED, u.getReservations().get(0).getStatus());
+        assertTrue(u.activeReservation().equals(null));
+        assertTrue(added);
+    }
+
+    @Test
+    public void incrementSeatAvailability() {
+        Building b = new Building();
+        HashMap<String, ArrayList<Integer>> avail = new HashMap<>();
+        // Creating ArrayList<Integer> with five entries of value 20
+        ArrayList<Integer> mondayAvailability = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            mondayAvailability.add(20);
+        }
+        // Add entry to the HashMap
+        avail.put("MONDAY", mondayAvailability);
+        b.setAvailability(avail);
+        b.addSeat(Weekday.MONDAY, 3);
+        assertTrue(b.getAvailability().containsKey("MONDAY"));
+        ArrayList<Integer> innerarr = b.getAvailability().get("MONDAY");
+        assertEquals(innerarr.get(3), 21);
+    }
+
+    @Test
+    public void decrementSeatAvailability() {
+        Building b = new Building();
+        HashMap<String, ArrayList<Integer>> avail = new HashMap<>();
+        // Creating ArrayList<Integer> with five entries of value 20
+        ArrayList<Integer> mondayAvailability = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            mondayAvailability.add(20);
+        }
+        // Add entry to the HashMap
+        avail.put("MONDAY", mondayAvailability);
+        b.setAvailability(avail);
+        b.removeSeat(Weekday.MONDAY, 3);
+        assertTrue(b.getAvailability().containsKey("MONDAY"));
+        ArrayList<Integer> innerarr = b.getAvailability().get("MONDAY");
+        assertEquals(innerarr.get(3), 19);
+    }
+
+    @Test
+    public void createNonConsecutiveReservation() {
+        Reservation r = new Reservation();
+        HashSet<Integer> resCart = new HashSet<>();
+
+        // Adding non-consecutive integers
+        integerSet.add(5);
+        integerSet.add(7);
+        integerSet.add(8);
+
+        assertEquals(r.createReservation(1, 10, resCart), null);
+    }
+
+    @Test
+    public void createTooBigReservation() {
+        Reservation r = new Reservation();
+        HashSet<Integer> resCart = new HashSet<>();
+
+        // Adding too many integers
+        integerSet.add(5);
+        integerSet.add(6);
+        integerSet.add(7);
+        integerSet.add(8);
+        integerSet.add(9);
+
+        assertEquals(r.createReservation(1, 10, resCart), null);
+    }
+
+    @Test
+    public void createValidReservation() {
+        Reservation r = new Reservation();
+        HashSet<Integer> resCart = new HashSet<>();
+
+        // Adding too many integers
+        integerSet.add(5);
+        integerSet.add(6);
+        integerSet.add(7);
+        integerSet.add(8);
+
+        Reservation fullRes = r.createReservation(1, 10, resCart);
+        assertEquals(fullRes.getStartTime(), 15);
+        assertEquals(fullRes.getEndTime(), 18);
+    }
+
+
+
+
+
+
+
 }
