@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Successful sign-in.",
                                     Toast.LENGTH_SHORT).show();
                             viewPager2.setCurrentItem(2, false);
+                            enterEmail.setText("");
+                            enterPassword.setText("");
                         } else {
                             loginTip.setText("Invalid email/password combination.");
                             loginTip.setTextColor(Color.RED);
