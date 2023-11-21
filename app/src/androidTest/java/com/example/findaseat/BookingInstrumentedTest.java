@@ -1,15 +1,19 @@
 package com.example.findaseat;
 
 import androidx.fragment.app.Fragment;
+import androidx.test.core.app.ActivityScenario;
 import androidx.viewpager2.widget.ViewPager2;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.anything;
 import static java.lang.Thread.sleep;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -19,6 +23,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +35,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ProfileInstrumentedTest {
+public class BookingInstrumentedTest {
 
     /**
      * Use {@link ActivityScenarioRule} to create and launch the activity under test, and close it
@@ -42,7 +47,7 @@ public class ProfileInstrumentedTest {
 
 
     @Before
-    public void init() {
+    public void setup() {
         /* LOGIN */
         onView(withText("Profile")).perform(click());
         onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
@@ -50,11 +55,7 @@ public class ProfileInstrumentedTest {
         onView(withId(R.id.enterEmail)).perform(typeText("sxfan@usc.edu"));
         onView(withId(R.id.enterPassword)).perform(typeText("123456"));
         onView(withId(R.id.loginButton)).perform(click());
-        try {
-            sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
         /* RETURN TO MAP */
         onView(withText("Map")).perform(click());
     }
@@ -63,8 +64,18 @@ public class ProfileInstrumentedTest {
     @Test
     public void Test1_bookOneReservation() {
         /* START BOOKING PAGE */
-        activityScenarioRule.scenario.onActivity { it.startBooking(1) }
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(1);
+        });
+
+
         /* Add Reservation to 'shopping cart' */
+
+    }
+
+    @Test
+    public void Test2_cancelReservationButton() {
+      /* Add Reservation to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
                 .atPosition(2)
@@ -79,51 +90,30 @@ public class ProfileInstrumentedTest {
         }
         /* Check that confirmation pop up shows up */
         onView(withText("Make Reservation?"))
-                .inRoot(RootMatchers.isDialog())
+                .inRoot(isDialog())
                 .check(matches(isDisplayed()));
-    }
 
-//    @Test
-//    public void Test7_cancelReservationButton() {
-//      /* Add Reservation to 'shopping cart' */
-//        onData(anything())
-//                .inAdapterView(withId(R.id.intervalListView))
-//                .atPosition(2)
-//                .onChildView(withId(R.id.addButton))
-//                .perform(click());
-//        /* Click BOOK RESERVATION Button */
-//        onView(withId(R.id.bookButton)).perform(click());
-//        try {
-//            sleep(3000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//        /* Check that confirmation pop up shows up */
-//        onView(withText("Make Reservation?"))
-//                .inRoot(RootMatchers.isDialog())
-//                .check(matches(isDisplayed()));
-//
-//        /* Click Yes */
-//        onView(withText("Yes"))
-//                .inRoot(RootMatchers.isDialog())
-//                .perform(click());
-//
-//        onView(withText("Profile")).perform(click());
-//
-//        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
-//
-//        onView(withId(R.id.enterEmail)).perform(typeText("sxfan@usc.edu"));
-//        onView(withId(R.id.enterPassword)).perform(typeText("123456"));
-//        onView(withId(R.id.loginButton)).perform(click());
-//        try {
-//            sleep(3000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
-//        onView(withId(R.id.displayFullName)).check(matches(withText("Sammie Fan")));
-//    }
+        /* Click Yes */
+        onView(withText("Yes"))
+                .inRoot(isDialog())
+                .perform(click());
+
+        onView(withText("Profile")).perform(click());
+
+        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.enterEmail)).perform(typeText("sxfan@usc.edu"));
+        onView(withId(R.id.enterPassword)).perform(typeText("123456"));
+        onView(withId(R.id.loginButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.displayFullName)).check(matches(withText("Sammie Fan")));
+    }
 }
 
 

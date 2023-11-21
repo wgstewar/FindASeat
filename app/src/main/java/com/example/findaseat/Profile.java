@@ -1,5 +1,7 @@
 package com.example.findaseat;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +56,7 @@ public class Profile extends Fragment {
                             userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
                             uscIdView.setText("USC ID: #" + currentUser.getUscId());
 
-                            ReservationListAdapter adapter = new ReservationListAdapter(getContext(), currentUser.getReservations());
+                            ReservationListAdapter adapter = new ReservationListAdapter(getApplicationContext(), currentUser.getReservations());
                             ListView reservationView = inf.findViewById(R.id.reservationView);
                             reservationView.setAdapter(adapter);
                         }

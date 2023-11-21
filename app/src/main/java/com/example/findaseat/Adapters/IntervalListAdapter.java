@@ -44,7 +44,12 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
 
         LocalTime nowTime = LocalTime.now();
         int endInterval = position + 1 + building.getOpenTime();
-        LocalTime endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
+        Log.d("tag", position + " " + building.getOpenTime() + " !!!");
+        LocalTime endTime;
+        if (endInterval == 48)
+            endTime = LocalTime.of(23,59);
+        else
+            endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
         if (nowTime.isAfter(endTime)) {
             addButton.setEnabled(false);
         } else {
