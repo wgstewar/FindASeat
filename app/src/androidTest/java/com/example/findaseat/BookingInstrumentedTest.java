@@ -24,9 +24,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -35,6 +37,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BookingInstrumentedTest {
 
     /**
@@ -65,25 +68,22 @@ public class BookingInstrumentedTest {
     public void Test1_cancelReservationButton() {
         /* START BOOKING PAGE */
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.startBooking(1);
+            activity.startBooking(4);
         });
-
-        /* Add Reservation to 'shopping cart' */
         try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        /* Add Reservation to 'shopping cart' */
             onData(anything())
                     .inAdapterView(withId(R.id.intervalListView))
-                    .atPosition(2)
+                    .atPosition(35)
                     .onChildView(withId(R.id.addButton))
                     .perform(click());
-        } catch (NoMatchingDataException e) {
-        // in case add button isn't there
-        }
         /* Click BOOK RESERVATION Button */
-        try {
             onView(withId(R.id.bookButton)).perform(click());
-        } catch (NoMatchingViewException e) {
-            // Active Reservation already existed
-        }
+
         try {
             sleep(3000);
         } catch (InterruptedException e) {
@@ -91,14 +91,9 @@ public class BookingInstrumentedTest {
         }
 
         /* Click Yes */
-        try {
             onView(withText("Yes"))
                     .inRoot(isDialog())
                     .perform(click());
-        } catch (NoMatchingViewException e) {
-            // Active Reservation already existed
-        }
-
         /* Return to Profile to check for Reservation */
         onView(withText("Profile")).perform(click());
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
@@ -122,12 +117,17 @@ public class BookingInstrumentedTest {
     public void Test2_bookOneReservation() {
         /* START BOOKING PAGE */
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.startBooking(1);
+            activity.startBooking(4);
         });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         /* Add Reservation to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(2)
+                .atPosition(35)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         /* Click BOOK RESERVATION Button */
@@ -151,60 +151,50 @@ public class BookingInstrumentedTest {
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
         onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
                 onChildView(withId(R.id.buildingName)).
-                check(matches(withText("Leavey Library")));
+                check(matches(withText("Olin Hall")));
 
         /* CANCEL RESERVATION SO FOLLOWING TESTS CAN RUN */
         /* Return to Profile to cancel reservation */
 
         onView(withText("Profile")).perform(click());
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
-        try {
-            onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
-                    onChildView(withId(R.id.cancelButton)).
-                    perform(click());
-        } catch (NoMatchingDataException e) {
-            // in case reservation isn't there
-        }
-        /* Click Yes */
-        try {
-            onView(withText("Yes"))
-                    .inRoot(isDialog())
-                    .perform(click());
-        } catch (NoMatchingViewException e) {
-            // in case reservation isn't there
-        }
     }
 
     @Test
     public void Test3_BookFiveReservations() {
         /* START BOOKING PAGE */
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.startBooking(1);
+            activity.startBooking(4);
         });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         /* Add 5 Reservation to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(2)
+                .atPosition(30)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(3)
+                .atPosition(31)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(4)
+                .atPosition(32)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(5)
+                .atPosition(33)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(6)
+                .atPosition(34)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         /* Click BOOK RESERVATION Button */
@@ -222,17 +212,22 @@ public class BookingInstrumentedTest {
     public void Test4_bookNonConsecutiveReservations() {
         /* START BOOKING PAGE */
         activityScenarioRule.getScenario().onActivity(activity -> {
-            activity.startBooking(1);
+            activity.startBooking(4);
         });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         /* Add Non Consecutive Reservations to 'shopping cart' */
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(2)
+                .atPosition(33)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         onData(anything())
                 .inAdapterView(withId(R.id.intervalListView))
-                .atPosition(4)
+                .atPosition(35)
                 .onChildView(withId(R.id.addButton))
                 .perform(click());
         /* Click BOOK RESERVATION Button */

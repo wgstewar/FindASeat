@@ -10,7 +10,10 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static java.lang.Thread.sleep;
 
@@ -261,11 +264,7 @@ public class ProfileInstrumentedTest {
         onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
         /* Register */
         onView(withId(R.id.registerLink)).perform(click());
-        try {
-            sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
         onView(withId(R.id.register_layout)).check(matches(isDisplayed()));
         onView(withId(R.id.enterUsername)).perform(typeText("jlo"));
         onView(withId(R.id.enterPassword)).perform(typeText("blahblah"));
@@ -273,15 +272,22 @@ public class ProfileInstrumentedTest {
         onView(withId(R.id.enterFullName)).perform(typeText("Jennifer Lopez"));
         onView(withId(R.id.enterEmail)).perform(typeText("jlopez@usc.edu"));
         onView(withId(R.id.enterUscId)).perform(typeText("1234567899"), closeSoftKeyboard());
-        onView(withId(R.id.enterAffiliation)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Undergraduate"))).perform(click());
-
         onView(withId(R.id.registerButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
         /* Logout */
         onView(withId(R.id.logoutLink)).perform(click());
         onView(withText("Profile")).perform(click());
-        onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        onView(withId(R.id.login_layout)).check(matches(isDisplayed()));
 
         /* Login with newly created account */
         onView(withId(R.id.enterEmail)).perform(typeText("jlopez@usc.edu"));
@@ -295,6 +301,7 @@ public class ProfileInstrumentedTest {
 
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.displayFullName)).check(matches(withText("Jennifer Lopez")));
+        FirebaseAuth.getInstance().getCurrentUser().delete();
     }
 
 }
