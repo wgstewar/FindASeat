@@ -2,6 +2,7 @@ package com.example.findaseat.Classes;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import android.util.Log;
 
 public class User {
     private ArrayList<Reservation> reservations;
@@ -107,8 +108,13 @@ public class User {
         if (reservations.isEmpty()) return false;
         Reservation r = reservations.get(0);
         int endInterval = r.getEndTime();
-        LocalTime endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
+        LocalTime endTime;
+        if (endInterval == 48)
+            endTime = LocalTime.of(23,59);
+        else
+            endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
         if (nowTime.isAfter(endTime)) {
+            Log.d("tag", endTime.getHour() + ":" + endTime.getMinute() + " ... " + nowTime.getHour() + ":" + nowTime.getMinute() + "\n");
             r.setStatus(ReservationStatus.COMPLETED);
             return true;
         }

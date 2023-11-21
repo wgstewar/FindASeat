@@ -48,8 +48,8 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
                 buildingNameView.setText(b.getName());
 
                 String date = reservation.getDate().toString();
-                String time = Reservation.intervalString(reservation.getStartTime()+b.getOpenTime(),
-                        reservation.getEndTime()+b.getOpenTime());
+                String time = Reservation.intervalString(reservation.getStartTime(),
+                        reservation.getEndTime());
                 dateTimeView.setText(date + ", " + time);
             }
         });

@@ -2,6 +2,7 @@ package com.example.findaseat;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,14 @@ public class Profile extends Fragment {
     public static DatabaseReference userRef;
     private ValueEventListener userListener;
     private View inf;
+    private Context ctx;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.ctx = context;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -56,7 +65,7 @@ public class Profile extends Fragment {
                             userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
                             uscIdView.setText("USC ID: #" + currentUser.getUscId());
 
-                            ReservationListAdapter adapter = new ReservationListAdapter(getApplicationContext(), currentUser.getReservations());
+                            ReservationListAdapter adapter = new ReservationListAdapter(ctx, currentUser.getReservations());
                             ListView reservationView = inf.findViewById(R.id.reservationView);
                             reservationView.setAdapter(adapter);
                         }
