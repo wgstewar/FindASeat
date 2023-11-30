@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.findaseat.Booking;
 import com.example.findaseat.Classes.*;
 import com.example.findaseat.R;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -50,7 +52,8 @@ public class IntervalListAdapter extends ArrayAdapter<Integer> {
             endTime = LocalTime.of(23,59);
         else
             endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
-        if (nowTime.isAfter(endTime)) {
+        if (LocalDate.now().getDayOfWeek().toString().equals(Booking.dayOfWeek.toString()) &&
+                nowTime.isAfter(endTime)) {
             addButton.setEnabled(false);
         } else {
             addButton.setEnabled(true);

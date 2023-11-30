@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
@@ -285,9 +286,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void modifyActiveReservation(View view) {
+        Reservation r = Profile.currentUser.activeReservation();
+        Weekday oldDay = Booking.dayOfWeek;
+        Booking.dayOfWeek = r.getDate().getWeekday();
         Dialog modifyDialog = new Dialog(this);
         modifyDialog.setContentView(R.layout.dialog_modify);
-        Reservation r = Profile.currentUser.activeReservation();
+        modifyDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Booking.dayOfWeek = oldDay;
+            }
+        });
         HashSet<Integer> shoppingCart = new HashSet<>();
         root.getReference("buildings/" + r.getBuildingId())
                 .get().addOnCompleteListener(
@@ -309,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         confirmModifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Reservation valid = Reservation.createReservation(r.getBuildingId(), open, shoppingCart);
+                Reservation valid = Reservation.createReservation(r.getDate(), r.getBuildingId(), open, shoppingCart);
                 if (valid == null) {
                     TextView tv = (TextView) modifyDialog.findViewById(R.id.modifyTip);
                     tv.setText("Select up to 4 consecutive intervals!");
@@ -340,24 +350,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         modifyDialog.show();
-    }
-
-    public void testFunctionDeleteLater(View view) {
-        Booking fg = new Booking();
-        Bundle bd = new Bundle();
-        bd.putInt("buildingId", 1);
-        fg.setArguments(bd);
-        viewPagerAdapter.addFragment(fg);
-        viewPager2.setCurrentItem(4, false);
-    }
-
-    public void testFunction2DeleteLater(View view) {
-        Booking fg = new Booking();
-        Bundle bd = new Bundle();
-        bd.putInt("buildingId", 2);
-        fg.setArguments(bd);
-        viewPagerAdapter.addFragment(fg);
-        viewPager2.setCurrentItem(4, false);
     }
 
     public static void startBooking(int bid) {

@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Booking extends Fragment {
     HashSet<Integer> shoppingCart;
     Building b;
     int buildingId;
-    public static Weekday dayOfWeek = Weekday.MONDAY;
+    public static Weekday dayOfWeek = Weekday.valueOf(LocalDate.now().getDayOfWeek().toString());
     ArrayList<Integer> a = new ArrayList<>();
     private Spinner selectWeekdaySpinner;
     private IntervalListAdapter adapter;
@@ -78,7 +80,7 @@ public class Booking extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 b = task.getResult().getValue(Building.class);
-                a = b.getAvailability().get("MONDAY");
+                a = b.getAvailability().get(dayOfWeek.toString());
                 ListView myList = inf.findViewById(R.id.intervalListView);
                 adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart);
                 myList.setAdapter(adapter);
@@ -105,6 +107,7 @@ public class Booking extends Fragment {
 
 
         selectWeekdaySpinner = inf.findViewById(R.id.selectWeekday);
+        selectWeekdaySpinner.setSelection(dayOfWeek.ordinal());
         selectWeekdaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -131,8 +134,12 @@ public class Booking extends Fragment {
         bookButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-                Reservation r = Reservation.createReservation(buildingId, b.getOpenTime(), shoppingCart);
+                int resWkday = selectWeekdaySpinner.getSelectedItemPosition();
+                int today = LocalDate.now().getDayOfWeek().getValue();
+                resWkday = resWkday - today;
+                resWkday = (resWkday < 0) ? resWkday + 7 : resWkday;
+                Date d = new Date(LocalDate.now().plusDays(resWkday));
+                Reservation r = Reservation.createReservation(d, buildingId, b.getOpenTime(), shoppingCart);
                 if (r == null) {
                     TextView tv = (TextView) inf.findViewById(R.id.intervalTip);
                     tv.setTextColor(Color.RED);

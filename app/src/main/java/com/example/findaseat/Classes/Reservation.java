@@ -75,15 +75,13 @@ public class Reservation {
                 (endTime == other.endTime) && (status == other.status);
     }
 
-    public static Reservation createReservation(int buildingId, int buildingStart, HashSet<Integer> shoppingCart) {
+    public static Reservation createReservation(Date d, int buildingId, int buildingStart, HashSet<Integer> shoppingCart) {
         int startTime = 48, endTime = 0;
         for (Integer time : shoppingCart) {
             startTime = (time < startTime) ? time : startTime;
             endTime = (time > endTime) ? time : endTime;
         }
         if ((endTime - startTime + 1 == shoppingCart.size()) && (endTime-startTime + 1 <= 4)) {
-
-            Date d = new Date(LocalDate.now());
             Reservation r = new Reservation(buildingId, d, startTime+buildingStart, endTime+1+buildingStart);
             return r;
         } else {

@@ -12,14 +12,14 @@ public class Date {
         year = 1900;
         month = 1;
         day = 1;
-        weekday = Weekday.SUNDAY;
+        weekday = Weekday.MONDAY;
     }
 
     public Date(LocalDate d) {
-        this.year = LocalDate.now().getYear();
-        this.month = LocalDate.now().getMonthValue();
-        this.day = LocalDate.now().getDayOfMonth();
-        this.weekday = Weekday.valueOf(LocalDate.now().getDayOfWeek().toString());
+        this.year = d.getYear();
+        this.month = d.getMonthValue();
+        this.day = d.getDayOfMonth();
+        this.weekday = Weekday.valueOf(d.getDayOfWeek().toString());
     }
 
     public Date(int year, int month, int day, Weekday weekday) {

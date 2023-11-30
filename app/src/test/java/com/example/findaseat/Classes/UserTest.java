@@ -171,8 +171,8 @@ public class UserTest extends TestCase {
         integerSet.add(5);
         integerSet.add(7);
         integerSet.add(8);
-
-        assertEquals(r.createReservation(1, 10, resCart), null);
+Date d = new Date(LocalDate.now());
+        assertEquals(r.createReservation(d, 1, 10, resCart), null);
     }
 
     @Test
@@ -186,8 +186,8 @@ public class UserTest extends TestCase {
         integerSet.add(7);
         integerSet.add(8);
         integerSet.add(9);
-
-        assertEquals(r.createReservation(1, 10, resCart), null);
+Date d = new Date(LocalDate.now());
+        assertNull(r.createReservation(d, 1, 10, resCart)), null);
     }
 
     @Test
@@ -200,8 +200,8 @@ public class UserTest extends TestCase {
         integerSet.add(6);
         integerSet.add(7);
         integerSet.add(8);
-
-        Reservation fullRes = r.createReservation(1, 10, resCart);
+        Date d = new Date(LocalDate.now());
+        Reservation fullRes = r.createReservation(d, 1, 10, resCart);
         assertEquals(fullRes.getStartTime(), 15);
         assertEquals(fullRes.getEndTime(), 18);
     }

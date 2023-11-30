@@ -1,5 +1,6 @@
 package com.example.findaseat.Classes;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import android.util.Log;
@@ -107,6 +108,13 @@ public class User {
     public boolean updateActiveReservation(LocalTime nowTime) {
         if (reservations.isEmpty()) return false;
         Reservation r = reservations.get(0);
+        Date d = r.getDate();
+        LocalDate resD = LocalDate.of(d.getYear(), d.getMonth(), d.getDay());
+        if (resD.isAfter(LocalDate.now())) return false;
+        if (resD.isBefore(LocalDate.now())) {
+            r.setStatus(ReservationStatus.COMPLETED);
+            return true;
+        }
         int endInterval = r.getEndTime();
         LocalTime endTime;
         if (endInterval == 48)
@@ -114,7 +122,6 @@ public class User {
         else
             endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
         if (nowTime.isAfter(endTime)) {
-            Log.d("tag", endTime.getHour() + ":" + endTime.getMinute() + " ... " + nowTime.getHour() + ":" + nowTime.getMinute() + "\n");
             r.setStatus(ReservationStatus.COMPLETED);
             return true;
         }
