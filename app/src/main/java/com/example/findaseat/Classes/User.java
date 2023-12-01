@@ -12,6 +12,7 @@ public class User {
     private String username;
     private String affiliation;
     private String email;
+    private String imageUrl;
 
     public User() {
         reservations = new ArrayList<Reservation>();
@@ -20,14 +21,16 @@ public class User {
         username = "";
         affiliation = "";
         email = "";
+        imageUrl = "";
     }
-    public User(String fullName, String uscId, String username, String email, String affiliation) {
+    public User(String fullName, String uscId, String username, String email, String affiliation, String imageUrl) {
         reservations = new ArrayList<Reservation>();
         this.fullName = fullName;
         this.uscId = uscId;
         this.username = username;
         this.email = email;
         this.affiliation = affiliation;
+        this.imageUrl = imageUrl;
     }
 
     public ArrayList<Reservation> getReservations() {
@@ -48,6 +51,8 @@ public class User {
 
     public String getEmail() { return email; }
 
+    public String getImageUrl() { return imageUrl; }
+
     public String getAffiliation() {
         return affiliation;
     }
@@ -62,6 +67,10 @@ public class User {
 
     public void setUscId(String uscId) {
         this.uscId = uscId;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setUsername(String username) {
@@ -116,14 +125,27 @@ public class User {
             return true;
         }
         int endInterval = r.getEndTime();
+        int startInterval = r.getStartTime();
         LocalTime endTime;
+        LocalTime startTime;
         if (endInterval == 48)
             endTime = LocalTime.of(23,59);
         else
             endTime = LocalTime.of(endInterval/2, endInterval%2 * 30);
+        if (startInterval == 0)
+            startTime = LocalTime.of(0,0);
+        else
+            startTime = LocalTime.of(startInterval/2, startInterval%2 * 30);
+
         if (nowTime.isAfter(endTime)) {
             r.setStatus(ReservationStatus.COMPLETED);
             return true;
+        }
+        if (nowTime.isAfter(startTime)) {
+            if (nowTime.isBefore(endTime)) {
+                r.setStatus(ReservationStatus.ACTIVE);
+                return true;
+            }
         }
         return false;
     }

@@ -3,6 +3,7 @@ package com.example.findaseat;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,16 @@ import com.example.findaseat.Classes.*;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
+
+
+
+
 
 public class Profile extends Fragment {
     private FirebaseAuth auth;
@@ -61,6 +70,14 @@ public class Profile extends Fragment {
                             TextView fullNameView = (TextView) inf.findViewById(R.id.displayFullName);
                             TextView userInfoView = (TextView) inf.findViewById(R.id.displayUserInfo);
                             TextView uscIdView = (TextView) inf.findViewById(R.id.displayUscId);
+                            //ImageView imageProfPic = (ImageView) inf.findViewById(R.id.profileImage);
+                            //Glide.with(getApplicationContext()).load(currentUser.getImageUrl()).into(imageProfPic);
+                            ImageView imageProfPic = (ImageView) inf.findViewById(R.id.profileImage);
+                            if (currentUser.getImageUrl() != null && !currentUser.getImageUrl().isEmpty()) {
+                                String imageUrl = currentUser.getImageUrl();
+                                Picasso.get().load(imageUrl).into(imageProfPic);
+                            }
+
                             fullNameView.setText(currentUser.getFullName());
                             userInfoView.setText(currentUser.getUsername() + ", " + currentUser.getAffiliation());
                             uscIdView.setText("USC ID: #" + currentUser.getUscId());
@@ -70,7 +87,6 @@ public class Profile extends Fragment {
                             reservationView.setAdapter(adapter);
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });

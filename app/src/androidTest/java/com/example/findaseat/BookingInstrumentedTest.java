@@ -76,13 +76,13 @@ public class BookingInstrumentedTest {
             throw new RuntimeException(e);
         }
         /* Add Reservation to 'shopping cart' */
-            onData(anything())
-                    .inAdapterView(withId(R.id.intervalListView))
-                    .atPosition(35)
-                    .onChildView(withId(R.id.addButton))
-                    .perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(35)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
         /* Click BOOK RESERVATION Button */
-            onView(withId(R.id.bookButton)).perform(click());
+        onView(withId(R.id.bookButton)).perform(click());
 
         try {
             sleep(3000);
@@ -91,9 +91,9 @@ public class BookingInstrumentedTest {
         }
 
         /* Click Yes */
-            onView(withText("Yes"))
-                    .inRoot(isDialog())
-                    .perform(click());
+        onView(withText("Yes"))
+                .inRoot(isDialog())
+                .perform(click());
         /* Return to Profile to check for Reservation */
         onView(withText("Profile")).perform(click());
         onView(withId(R.id.profileLayout)).check(matches(isDisplayed()));
@@ -240,7 +240,93 @@ public class BookingInstrumentedTest {
         onView(withId(R.id.intervalTip)).check(matches(withText("Select up to 4 consecutive intervals!")));
     }
 
+    /*public void Test5_makeReservationFullInterval(){
+        //start booking page
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(4);
+        });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        //
+
+    }*/
+
+    public void Test6_checkBuildSeatsCreate(){
+        //start booking page
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(4);
+        });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        //add a booking to shopping cart
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(1)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+
+        //click book reservation button
+        onView(withId(R.id.bookButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        /* Check that confirmation pop up shows up */
+        onView(withText("Make Reservation?"))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+        /* Click Yes */
+        onView(withText("Yes"))
+                .inRoot(isDialog())
+                .perform(click());
+
+        /* Return to Map and go to building and check for reservation */
+        onView(withText("Map")).perform(click());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(R.id.reservationView)).atPosition(0).
+                onChildView(withId(R.id.buildingName)).
+                check(matches(withText("Olin Hall")));
+
+        //check that it matches with the number stated in the reservation
+        onData(anything()).inAdapterView(withId(R.id.seatsAvailView)).atPosition(0).
+                check(matches(withText("# AVAILABLE")));
+
+    }
+
+    public void Test7_checkBuildSeatsCancel(){
+        //start booking page
+        activityScenarioRule.getScenario().onActivity(activity -> {
+            activity.startBooking(4);
+        });
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        //add a booking to shopping cart
+        onData(anything())
+                .inAdapterView(withId(R.id.intervalListView))
+                .atPosition(30)
+                .onChildView(withId(R.id.addButton))
+                .perform(click());
+
+        //click book reservation button
+        onView(withId(R.id.bookButton)).perform(click());
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
 
 }
-

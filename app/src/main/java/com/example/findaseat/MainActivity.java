@@ -207,6 +207,15 @@ public class MainActivity extends AppCompatActivity {
             uscIdEditText.setBackgroundColor(Color.WHITE);
         }
 
+        EditText imageUrlEditText = (EditText) findViewById(R.id.profimage);
+        String imageUrl = imageUrlEditText.getText().toString();
+        if (imageUrl.isEmpty()) {
+            valid = false;
+            imageUrlEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+        } else {
+            imageUrlEditText.setBackgroundColor(Color.WHITE);
+        }
+
         Spinner affiliationSpinner = (Spinner) findViewById(R.id.enterAffiliation);
         String affiliation = affiliationSpinner.getSelectedItem().toString();
         if (!valid) {
@@ -228,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                             String uid = auth.getCurrentUser().getUid();
                             DatabaseReference reference;
                             reference = root.getReference("users/" + uid);
-                            User newUser = new User(fullName, uscId, username, email, affiliation);
+                            User newUser = new User(fullName, uscId, username, email, affiliation, imageUrl);
                             reference.setValue(newUser);
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
                             viewPager2.setCurrentItem(2, false);
