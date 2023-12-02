@@ -1,6 +1,5 @@
 package com.example.findaseat;
 
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.time.LocalDate;
@@ -45,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import com.example.findaseat.Classes.*;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -76,9 +76,9 @@ public class Booking extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View inf = inflater.inflate(R.layout.fragment_booking, container, false);
-        dayOfWeek = Weekday.valueOf(LocalDate.now().getDayOfWeek().toString());
+
         FirebaseDatabase.getInstance().getReference("buildings/" + buildingId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
+            int id = buildingId;
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 b = task.getResult().getValue(Building.class);
                 a = b.getAvailability().get(dayOfWeek.toString());
@@ -90,6 +90,49 @@ public class Booking extends Fragment {
                 TextView descView = (TextView) inf.findViewById(R.id.displayDescription);
                 nameView.setText(b.getName());
                 descView.setText(b.getDescription());
+
+                ImageView imageProfPic = (ImageView) inf.findViewById(R.id.buildingImageView);
+                if (id==1) { //leavey library
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/c/c3/USCLeavey2007.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==2){ //doheny
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/9/91/Doheny_Library_interior.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==3){ //leventhal
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/f/f8/Leventhal2012.JPG";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==4){ //olin hall
+                    String imageUrl = "https://live.staticflickr.com/5545/11469647436_436e6a6fc1_5k.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==5){ //annenberg hall
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/87/Wallis_Annenberg_Hall.jpeg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==6){ //IYA
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/4/49/Front_of_Iovine_and_Young_Academy.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==7){ //Ronald Tutor Center
+                    String imageUrl = "https://www.tutorperini.com/media/4221/campus-centerb.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==8){ //Taper Hall
+                    String imageUrl = "https://cms.concept3d.com/map/lib/image-cache/i.php?mapId=1928&image=1928/Taper-Hall_GR45205.jpg&w=900&h=508&r=1";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==9){ //Gould Law School
+                    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/c/c9/USC_Law.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+                if (id==10){ //Fertitta Hall
+                    String imageUrl = "https://today.usc.edu/wp-content/uploads/2016/09/Fertitta_toned_web2.jpg";
+                    Picasso.get().load(imageUrl).into(imageProfPic);
+                }
+
             }
         });
 
@@ -108,22 +151,7 @@ public class Booking extends Fragment {
 
 
         selectWeekdaySpinner = inf.findViewById(R.id.selectWeekday);
-        String[] wkdays = new String[] {
-                "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
-        };
-        String[] arraySpinner = new String[] {
-                "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
-        };
-        for (int i = 0; i < 7; i++) {
-            int day = dayOfWeek.ordinal() + i;
-            day %= 7;
-            arraySpinner[i] = wkdays[day];
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(ctx,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectWeekdaySpinner.setAdapter(adapter);
-        selectWeekdaySpinner.setSelection(0);
+        selectWeekdaySpinner.setSelection(dayOfWeek.ordinal());
         selectWeekdaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -143,14 +171,14 @@ public class Booking extends Fragment {
 
         Button bookButton = (Button) inf.findViewById(R.id.bookButton);
         FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user == null) bookButton.setEnabled(false);
-                    else bookButton.setEnabled(true);
-                });
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null) bookButton.setEnabled(false);
+            else bookButton.setEnabled(true);
+        });
         bookButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                int resWkday = Weekday.valueOf((String)selectWeekdaySpinner.getSelectedItem()).ordinal();
+                int resWkday = selectWeekdaySpinner.getSelectedItemPosition();
                 int today = LocalDate.now().getDayOfWeek().getValue();
                 resWkday = resWkday - today;
                 resWkday = (resWkday < 0) ? resWkday + 7 : resWkday;
@@ -160,6 +188,10 @@ public class Booking extends Fragment {
                     TextView tv = (TextView) inf.findViewById(R.id.intervalTip);
                     tv.setTextColor(Color.RED);
                     tv.setText("Select up to 4 consecutive intervals!");
+                    return;
+                }
+                if (Profile.currentUser==null){
+                    Toast.makeText(getContext(), "User is null.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (Profile.currentUser.activeReservation() != null) {

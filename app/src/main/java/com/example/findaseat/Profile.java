@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.findaseat.Adapters.ReservationListAdapter;
 import com.example.findaseat.Classes.*;
 
@@ -70,9 +71,8 @@ public class Profile extends Fragment {
                             TextView fullNameView = (TextView) inf.findViewById(R.id.displayFullName);
                             TextView userInfoView = (TextView) inf.findViewById(R.id.displayUserInfo);
                             TextView uscIdView = (TextView) inf.findViewById(R.id.displayUscId);
-                            //ImageView imageProfPic = (ImageView) inf.findViewById(R.id.profileImage);
-                            //Glide.with(getApplicationContext()).load(currentUser.getImageUrl()).into(imageProfPic);
                             ImageView imageProfPic = (ImageView) inf.findViewById(R.id.profileImage);
+                            //Glide.with(getApplicationContext()).load(currentUser.getImageUrl()).into(imageProfPic);
                             if (currentUser.getImageUrl() != null && !currentUser.getImageUrl().isEmpty()) {
                                 String imageUrl = currentUser.getImageUrl();
                                 Picasso.get().load(imageUrl).into(imageProfPic);
