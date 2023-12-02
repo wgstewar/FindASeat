@@ -27,6 +27,7 @@
         android:hint="Username"
         android:inputType="textPersonName"
         android:minHeight="48dp"/>
+
     <EditText
         android:id="@+id/enterPassword"
         android:layout_width="wrap_content"
@@ -80,7 +81,7 @@
         android:minHeight="48dp"
         android:hint="USC ID #"
         android:ems="15"
-        android:inputType="number" />
+        android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/affiliationTip"
@@ -88,7 +89,7 @@
         android:layout_height="wrap_content"
         android:text="Select affiliation"
         android:textSize="17sp"
-        android:layout_marginTop="392dp"
+        android:layout_marginTop="450dp"
         android:layout_marginStart="20dp"
         />
 
@@ -97,19 +98,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="427dp"
+        android:layout_marginTop="480dp"
         android:entries="@array/affiliations"
         android:spinnerMode="dropdown" />
 
-    <Button
-        android:id="@+id/registerButton"
+    <EditText
+        android:id="@+id/profimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="480dp"
-        android:height="60dp"
-        android:onClick="attemptRegister"
-        android:text="REGISTER" />
+        android:layout_marginTop="392dp"
+        android:ems="15"
+        android:hint="Profile image URL"
+        android:inputType="textWebEmailAddress"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/registerLink"
@@ -117,8 +119,19 @@
         android:layout_height="wrap_content"
         android:text="Click here to login."
         android:textSize="17sp"
-        android:layout_marginTop="497dp"
+        android:layout_marginTop="537dp"
         android:layout_marginStart="135dp"
         android:onClick="toLogin"
         />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="520dp"
+        android:height="60dp"
+        android:onClick="attemptRegister"
+        android:text="REGISTER" />
+
 </FrameLayout>

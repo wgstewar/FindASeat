@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserTest extends TestCase {
@@ -122,7 +123,8 @@ public class UserTest extends TestCase {
         boolean added = u.addReservation(r2);
         u.cancelActiveReservation();
         assertEquals(ReservationStatus.CANCELLED, u.getReservations().get(0).getStatus());
-        assertTrue(u.activeReservation().equals(null));
+        //assertTrue(u.activeReservation().equals(null));
+        assertEquals(u.activeReservation(), null);
         assertTrue(added);
     }
 
@@ -141,7 +143,7 @@ public class UserTest extends TestCase {
         b.addSeat(Weekday.MONDAY, 3);
         assertTrue(b.getAvailability().containsKey("MONDAY"));
         ArrayList<Integer> innerarr = b.getAvailability().get("MONDAY");
-        assertEquals(innerarr.get(3), 21);
+        assertEquals(Optional.ofNullable(innerarr.get(3)), 21); //debug
     }
 
     @Test
@@ -159,51 +161,58 @@ public class UserTest extends TestCase {
         b.removeSeat(Weekday.MONDAY, 3);
         assertTrue(b.getAvailability().containsKey("MONDAY"));
         ArrayList<Integer> innerarr = b.getAvailability().get("MONDAY");
-        assertEquals(innerarr.get(3), 19);
+        assertEquals(Optional.ofNullable(innerarr.get(3)), 19); //debug
     }
 
     @Test
     public void createNonConsecutiveReservation() {
-        Reservation r = new Reservation();
+        //Reservation r = new Reservation();
         HashSet<Integer> resCart = new HashSet<>();
+        Date d = new Date(2023, 12, 2 , Weekday.SATURDAY);
 
         // Adding non-consecutive integers
-        integerSet.add(5);
-        integerSet.add(7);
-        integerSet.add(8);
-Date d = new Date(LocalDate.now());
-        assertEquals(r.createReservation(d, 1, 10, resCart), null);
+        resCart.add(5);
+        resCart.add(7);
+        resCart.add(8);
+
+        assertEquals(Reservation.createReservation(d, 1,10, resCart), null);
     }
 
     @Test
     public void createTooBigReservation() {
         Reservation r = new Reservation();
         HashSet<Integer> resCart = new HashSet<>();
+        Date d = new Date(2023, 12, 2 , Weekday.SATURDAY);
 
         // Adding too many integers
-        integerSet.add(5);
-        integerSet.add(6);
-        integerSet.add(7);
-        integerSet.add(8);
-        integerSet.add(9);
-Date d = new Date(LocalDate.now());
-        assertNull(r.createReservation(d, 1, 10, resCart)), null);
+        resCart.add(5);
+        resCart.add(6);
+        resCart.add(7);
+        resCart.add(8);
+        resCart.add(9);
+
+        assertEquals(Reservation.createReservation(d, 1, 10, resCart), null);
     }
 
     @Test
     public void createValidReservation() {
-        Reservation r = new Reservation();
+        //Reservation r = new Reservation();
         HashSet<Integer> resCart = new HashSet<>();
+        Date d = new Date(2023, 12, 2 , Weekday.SATURDAY);
 
         // Adding too many integers
-        integerSet.add(5);
-        integerSet.add(6);
-        integerSet.add(7);
-        integerSet.add(8);
-        Date d = new Date(LocalDate.now());
-        Reservation fullRes = r.createReservation(d, 1, 10, resCart);
+        resCart.add(5);
+        resCart.add(6);
+        resCart.add(7);
+        resCart.add(8);
+
+        /*Reservation fullRes = r.createReservation(1, 10, resCart);
+        assertEquals(fullRes.getEndTime(), 19);
+        assertEquals(fullRes.getEndTime(), 18);*/
+        //assertEquals(Reservation.createReservation(1, 10, resCart), null);
+        Reservation fullRes = Reservation.createReservation(d, 1, 10, resCart);
         assertEquals(fullRes.getStartTime(), 15);
-        assertEquals(fullRes.getEndTime(), 18);
+        assertEquals(fullRes.getEndTime(), 19);
     }
 
 
