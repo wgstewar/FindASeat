@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -75,7 +76,7 @@ public class Booking extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View inf = inflater.inflate(R.layout.fragment_booking, container, false);
-
+        dayOfWeek = Weekday.valueOf(LocalDate.now().getDayOfWeek().toString());
         FirebaseDatabase.getInstance().getReference("buildings/" + buildingId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -107,7 +108,22 @@ public class Booking extends Fragment {
 
 
         selectWeekdaySpinner = inf.findViewById(R.id.selectWeekday);
-        selectWeekdaySpinner.setSelection(dayOfWeek.ordinal());
+        String[] wkdays = new String[] {
+                "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
+        };
+        String[] arraySpinner = new String[] {
+                "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
+        };
+        for (int i = 0; i < 7; i++) {
+            int day = dayOfWeek.ordinal() + i;
+            day %= 7;
+            arraySpinner[i] = wkdays[day];
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(ctx,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectWeekdaySpinner.setAdapter(adapter);
+        selectWeekdaySpinner.setSelection(0);
         selectWeekdaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -134,7 +150,7 @@ public class Booking extends Fragment {
         bookButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                int resWkday = selectWeekdaySpinner.getSelectedItemPosition();
+                int resWkday = Weekday.valueOf((String)selectWeekdaySpinner.getSelectedItem()).ordinal();
                 int today = LocalDate.now().getDayOfWeek().getValue();
                 resWkday = resWkday - today;
                 resWkday = (resWkday < 0) ? resWkday + 7 : resWkday;
