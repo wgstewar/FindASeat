@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,6 +48,7 @@ import com.example.findaseat.Classes.*;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Booking extends Fragment {
@@ -76,14 +78,16 @@ public class Booking extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View inf = inflater.inflate(R.layout.fragment_booking, container, false);
-
+        dayOfWeek = Weekday.valueOf(LocalDate.now().getDayOfWeek().toString());
         FirebaseDatabase.getInstance().getReference("buildings/" + buildingId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             int id = buildingId;
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 b = task.getResult().getValue(Building.class);
-                a = b.getAvailability().get(dayOfWeek.toString());
+                ArrayList<Integer> h = (ArrayList<Integer>) b.getAvailability().get(dayOfWeek.toString()).clone();
+
+                a = h;
                 ListView myList = inf.findViewById(R.id.intervalListView);
-                adapter = new IntervalListAdapter(getActivity(), a, b, shoppingCart);
+                adapter = new IntervalListAdapter(ctx, a, b, shoppingCart);
                 myList.setAdapter(adapter);
 
                 TextView nameView = (TextView) inf.findViewById(R.id.displayBuildingName);
@@ -140,8 +144,11 @@ public class Booking extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 b = snapshot.getValue(Building.class);
+
                 a.clear();
-                a.addAll(b.getAvailability().get(dayOfWeek.toString()));
+                ArrayList<Integer> h = (ArrayList<Integer>) b.getAvailability().get(dayOfWeek.toString()).clone();
+
+                a.addAll(h);
                 if (adapter != null) adapter.notifyDataSetChanged();
             }
             @Override
@@ -151,16 +158,34 @@ public class Booking extends Fragment {
 
 
         selectWeekdaySpinner = inf.findViewById(R.id.selectWeekday);
-        selectWeekdaySpinner.setSelection(dayOfWeek.ordinal());
+        String[] wkdays = new String[] {
+                "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
+        };
+        ArrayList<String> arraySpinner = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            int day = dayOfWeek.ordinal() + i;
+            day %= 7;
+            arraySpinner.add(wkdays[day]);
+        }
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<>(ctx,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectWeekdaySpinner.setAdapter(spAdapter);
+        selectWeekdaySpinner.setSelection(0);
+
         selectWeekdaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 dayOfWeek = Weekday.valueOf(parent.getItemAtPosition(pos).toString());
                 if (b != null){
                     a.clear();
-                    a.addAll(b.getAvailability().get(dayOfWeek.toString()));
+                    ArrayList<Integer> h = (ArrayList<Integer>) b.getAvailability().get(dayOfWeek.toString()).clone();
+                    a.addAll(h);
+                    Log.d("??", b.getAvailability().toString());
+                    Log.d("??", dayOfWeek.toString());
                     shoppingCart.clear();
                     adapter.notifyDataSetChanged();
+                    Log.d("umm", a.toString());
                 }
             }
             @Override
@@ -178,7 +203,7 @@ public class Booking extends Fragment {
         bookButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                int resWkday = selectWeekdaySpinner.getSelectedItemPosition();
+                int resWkday = Weekday.valueOf((String)selectWeekdaySpinner.getSelectedItem()).ordinal();
                 int today = LocalDate.now().getDayOfWeek().getValue();
                 resWkday = resWkday - today;
                 resWkday = (resWkday < 0) ? resWkday + 7 : resWkday;
