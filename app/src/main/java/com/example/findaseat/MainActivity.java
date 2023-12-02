@@ -151,11 +151,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void attemptRegister(View v) {
         boolean valid = true;
+        TextView tv = (TextView) findViewById(R.id.registerTip);
+        tv.setText("Please correct the following fields.");
+
         EditText usernameEditText = (EditText) findViewById(R.id.enterUsername);
         String username = usernameEditText.getText().toString();
 
-        if (username.isEmpty()) {
+        if (username.length() < 4 || username.length() > 12) {
             valid = false;
+            tv.setText("Please enter a username between 4-12 characters.");
             usernameEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
             usernameEditText.setBackgroundColor(Color.WHITE);
@@ -163,27 +167,29 @@ public class MainActivity extends AppCompatActivity {
 
         EditText passwordEditText = (EditText) findViewById(R.id.enterPassword);
         String pwd = passwordEditText.getText().toString();
-        if (pwd.length() < 6) {
+        if (pwd.length() < 6 || pwd.length() > 20) {
             valid = false;
+            tv.setText("Please enter a password between 6-20 characters.");
             passwordEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
             passwordEditText.setBackgroundColor(Color.WHITE);
-        }
 
-        EditText passwordCopyEditText = (EditText) findViewById(R.id.reenterPassword);
-        String pwdCopy = passwordCopyEditText.getText().toString();
-        if (!pwd.equals(pwdCopy)) {
-            valid = false;
-            passwordCopyEditText.setBackgroundColor(Color.rgb(252, 174, 174));
-        } else {
-            passwordCopyEditText.setBackgroundColor(Color.WHITE);
+            EditText passwordCopyEditText = (EditText) findViewById(R.id.reenterPassword);
+            String pwdCopy = passwordCopyEditText.getText().toString();
+            if (!pwd.equals(pwdCopy)) {
+                valid = false;
+                tv.setText("Both passwords must match.");
+                passwordCopyEditText.setBackgroundColor(Color.rgb(252, 174, 174));
+            } else {
+                passwordCopyEditText.setBackgroundColor(Color.WHITE);
+            }
         }
 
         EditText fullNameEditText = (EditText) findViewById(R.id.enterFullName);
         String fullName = fullNameEditText.getText().toString();
         if (fullName.isEmpty()) {
-
             valid = false;
+            tv.setText("Please enter your full name.");
             fullNameEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
             fullNameEditText.setBackgroundColor(Color.WHITE);
@@ -191,8 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
         EditText emailEditText = (EditText) findViewById(R.id.enterEmail);
         String email = emailEditText.getText().toString();
-        if (email.isEmpty()) {
+        if (email.isEmpty() || !email.contains("@usc.edu")) {
             valid = false;
+            tv.setText("Please enter your @usc.edu address.");
             emailEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
             emailEditText.setBackgroundColor(Color.WHITE);
@@ -202,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
         String uscId = uscIdEditText.getText().toString();
         if (uscId.length() != 10) {
             valid = false;
+            tv.setText("Please enter your 10-digit USC ID.");
             uscIdEditText.setBackgroundColor(Color.rgb(252, 174, 174));
         } else {
             uscIdEditText.setBackgroundColor(Color.WHITE);
@@ -210,8 +218,6 @@ public class MainActivity extends AppCompatActivity {
         Spinner affiliationSpinner = (Spinner) findViewById(R.id.enterAffiliation);
         String affiliation = affiliationSpinner.getSelectedItem().toString();
         if (!valid) {
-            TextView tv = (TextView) findViewById(R.id.registerTip);
-            tv.setText("Please correct the following fields.");
             tv.setTextColor(Color.RED);
             return;
         }
@@ -233,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Account created !", Toast.LENGTH_SHORT).show();
                             viewPager2.setCurrentItem(2, false);
                         } else {
-                            Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Account with email already exists!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
